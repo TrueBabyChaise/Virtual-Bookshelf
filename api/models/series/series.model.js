@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
-const { Book } = require('../book/book.model')
-
 const Series = new mongoose.Schema({
     title: {type: String, required:true},
+    key: {type: String},
     fkUser: {type: mongoose.ObjectId, required:true},
-    books: {type: [Book]}
+    books: {type: [mongoose.ObjectId]}
 });
 
 const SeriesModel = mongoose.model('series', Series);
@@ -58,9 +57,7 @@ module.exports = {
         const seriesFound = await  findOneSeries({title, fkUser});
         if (!seriesFound) return false;
 
-        console.log("Before", seriesFound.books)
-        console.log("addToSet", seriesFound.books.addToSet(book))
-        console.log("After", seriesFound.books)
+        seriesFound.books.addToSet(book)
         seriesFound.save()
         return seriesFound
     },
@@ -69,9 +66,9 @@ module.exports = {
         const seriesFound = await  findOneSeries({title, fkUser});
         if (!seriesFound) return false;
 
-        console.log("Before",seriesFound.books)
-        seriesFound.books = seriesFound.books.concat(books)
-        console.log("After", seriesFound.books)
+        books.forEach(e => {
+            seriesFound.books.addToSet(e._id)
+        })
         seriesFound.save()
         return seriesFound
     }

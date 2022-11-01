@@ -1,5 +1,5 @@
 
-const User = require('../user/user.model');
+const User = require('@models/user/user.model');
 const mongoose = require('mongoose');
 const Book = new mongoose.Schema({
     title: {type: String, required:true},

@@ -2,6 +2,7 @@ const router = require('express').Router();
 const axios = require('axios');
 const authToken = require("../../passport/authToken");
 const { createSeries, findAllSeriesOfUser, addBookInSeries, addBooksInSeries, findOneSeries, removeSeriesByTitle, updateSeriesByTitle} = require("@models/series/series.model");
+const { findOneBookByISBN } = require("@models/book/book.model");
 
 
 router.get('/:title', authToken, async (req, res) => {
@@ -50,23 +51,32 @@ router.post('/:title', authToken, async (req, res) => {
 		res.status(422).json({message: "Series already exists"});
 })
 
-router.post('/:title/book', authToken, async (req, res) => {
+router.post('/:title/book/:isbn', authToken, async (req, res) => {
 	const params = req.params
 	const title = params.title
+	const isbn = params.isbn.replaceAll("-", "")
 	const userId = req.user
-	const book = params.book
 
 	if (!userId) {
 		res.status(403).json({message: "Forbidden"})
 		return
 	}
+
 	const seriesFound = await findOneSeries({title, fkUser: userId})
 	if (!seriesFound) {
 		res.status(422).json({message: "Series not found"});
 		return
 	}
 
-	const bookAdded = await addBookInSeries({title, fkUser, book})
+	console.log({isbn, fkUser: userId})
+
+	const bookFound = await findOneBookByISBN({isbn, fkUser: userId})
+	if (!bookFound) {
+		res.status(422).json({message: "Book not found"});
+		return
+	}
+
+	const bookAdded = await addBookInSeries({title, fkUser: userId, book: bookFound._id})
 
 	if (bookAdded)
 		res.status(200).json({bookAdded});
@@ -77,7 +87,7 @@ router.post('/:title/book', authToken, async (req, res) => {
 router.post('/:title/books', authToken, async (req, res) => {
 	const params = req.params
 	const title = params.title
-	const books = params.books
+	const books = req.body.books
 	const userId = req.user
 
 	if (!userId) {
@@ -91,7 +101,7 @@ router.post('/:title/books', authToken, async (req, res) => {
 		return
 	}
 
-	const booksAdded = await addBooksInSeries({title, fkUser, books})
+	const booksAdded = await addBooksInSeries({title, fkUser: userId, books})
 	if (booksAdded)
 		res.status(200).json({booksAdded});
 	else

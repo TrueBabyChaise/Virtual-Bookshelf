@@ -8,7 +8,7 @@ router.get('/book/:isbn', authToken, async (req, res) => {
 	if (!userId)
 		res.status(403).json({message: "Forbidden"})
 	const params = req.params
-	const isbn = params.isbn
+	const isbn = params.isbn.replaceAll("-", "")
 
 
 	res.status(200).json(await findOneBookByISBN({isbn, fkUser: userId}));

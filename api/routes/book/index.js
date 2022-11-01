@@ -38,7 +38,7 @@ router.get('/isbn/:isbn', async (req, res) => {
 
 router.post('/:isbn', authToken, async (req, res) => {
 	const params = req.params
-	const isbn = params.isbn
+	const isbn = params.isbn.replaceAll("-", "")
 	const userId = req.user
 
 	if (!userId)
@@ -60,7 +60,7 @@ router.post('/:isbn', authToken, async (req, res) => {
 
 router.put('/:isbn', authToken, async (req, res) => {
 	const params = req.params
-	const isbn = params.isbn
+	const isbn = params.isbn.replaceAll("-", "")
 	const userId = req.user
 	let newParams = req.body.book
 
@@ -92,7 +92,7 @@ router.put('/:isbn', authToken, async (req, res) => {
 
 router.delete('/:isbn', authToken, async (req, res) => {
 	const params = req.params
-	const isbn = params.isbn
+	const isbn = params.isbn.replaceAll("-", "")
 	const userId = req.user
 
 	if (!userId)
