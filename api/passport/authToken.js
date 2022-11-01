@@ -2,8 +2,10 @@ const jwtOptions = require('./jwtOptions');
 const jwt = require('jsonwebtoken');
 
 module.exports = function authToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    if (authHeader == null) return res.sendStatus(401);
+    let authHeader = req.headers['authorization'];
+    if (authHeader == null || !authHeader.startsWith("Bearer ")) return res.sendStatus(401);
+
+    authHeader = authHeader.replace("Bearer ", "")
 
     jwt.verify(authHeader, jwtOptions.secretOrKey, (err, user) => {
         if (err) return res.sendStatus(403);

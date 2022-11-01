@@ -1,11 +1,13 @@
 const router = require('express').Router();
 const axios = require('axios');
+const authToken = require("../../passport/authToken");
+const { addBook, removeBookByISBN, updateBookByISBN, findOneByISBN} = require("../../models/book/book.model");
 
 /**
  * 
- * @param {Array<>} reactions 
+ * @param {String} ISBN 
  */
-async function getBookByISBN(isbn) {
+async function requestBookByISBN(isbn) {
 	return new Promise(function (resolve, reject) {
 		var config = {
 			method: 'get',
@@ -26,14 +28,86 @@ async function getBookByISBN(isbn) {
 	})
 }
 
-router.get('/isbn/:id', async (req, res) => {
+router.get('/isbn/:isbn', async (req, res) => {
 	let params = req.params
-	let isbn_id = params.id
+	let isbn = params.isbn
 
-	console.log(isbn_id)
-
-	res.status(200).json(await getBookByISBN(isbn_id));
+	res.status(200).json(await requestBookByISBN(isbn));
 	
+});
+
+router.post('/:isbn', authToken, async (req, res) => {
+	const params = req.params
+	const isbn = params.isbn
+	const userId = req.user
+
+	if (!userId)
+		res.status(403).json({message: "Forbidden"})
+	else {
+		try {
+			const bookInfo = await getBookByISBN(isbn)
+			const title = bookInfo.title
+			const bookAdded = await addBook({title, isbn, status: 0, fkUser: userId})
+			if (bookAdded)
+				res.status(200).json({bookAdded});
+			else
+				res.status(422).json({message: "Book already added"})
+		} catch (error) {
+			res.status(422).json({message: "Wrong ISBN"});
+		}
+	}
+});
+
+router.put('/:isbn', authToken, async (req, res) => {
+	const params = req.params
+	const isbn = params.isbn
+	const userId = req.user
+	let newParams = req.body.book
+
+	try {
+		if (!newParams || !newParams.title) {
+			const book = await findOneByISBN({isbn, fkUser: userId})
+			newParams = { title: book.officialTitle } 
+		}
+	} catch (error) {
+		res.status(422).json({message: "Wrong ISBN"});
+		return
+	}
+	
+
+	if (!userId)
+		res.status(403).json({message: "Forbidden"})
+	else {
+		try {
+			const bookUpdated = await updateBookByISBN({isbn, fkUser: userId, newParams})
+			if (bookUpdated)
+				res.status(200).json({bookUpdated});
+			else
+				res.status(422).json({message: "Book already added"})
+		} catch (error) {
+			res.status(422).json({message: "Wrong ISBN"});
+		}
+	}
+});
+
+router.delete('/:isbn', authToken, async (req, res) => {
+	const params = req.params
+	const isbn = params.isbn
+	const userId = req.user
+
+	if (!userId)
+		res.status(403).json({message: "Forbidden"})
+	else {
+		try {
+			const bookDeleted = await removeBookByISBN({isbn, fkUser: userId})
+			if (bookDeleted)
+				res.status(200).json({bookDeleted});
+			else
+				res.status(422).json({message: "Book already added"})
+		} catch (error) {
+			res.status(422).json({message: "Wrong ISBN"});
+		}
+	}
 });
 
 module.exports = router
