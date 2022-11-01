@@ -6,12 +6,13 @@ const Book = new mongoose.Schema({
     officialTitle: {type: String, required:true},
     isbn: {type: String, required:true},
     status: {type: Number, required:true},
-    fkUser: {type: String, required:true},
+    fkUser: {type: mongoose.ObjectId, required:true},
+    fkSerie: {type: mongoose.ObjectId}
 });
 
 const BookModel = mongoose.model('book', Book);
 
-async function findOneByISBN({isbn, fkUser}) {
+async function findOneBookByISBN({isbn, fkUser}) {
     const bookFound = await BookModel.find({ isbn, fkUser })
     if (bookFound.length)
         return bookFound[0];
@@ -42,12 +43,12 @@ async function updateBookByISBN({isbn, fkUser, newParams}) {
 
 module.exports = {
     Book,
-    findOneByISBN,
+    findOneBookByISBN,
     removeBookByISBN,
     updateBookByISBN,
 
-    async addBook({title, isbn, status, fkUser}) {
-        const bookFound = await findOneByISBN({isbn, fkUser});
+    async createBookEntry({title, isbn, status, fkUser}) {
+        const bookFound = await findOneBookByISBN({isbn, fkUser});
         if (!bookFound) {
             const book = new BookModel({title, officialTitle: title, isbn, status, fkUser});
             book.save();
@@ -64,4 +65,3 @@ module.exports = {
         return bookFounds
     }
 }
-

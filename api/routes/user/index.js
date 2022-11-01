@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const { findOneByISBN, getUsersBooks }= require("../../models/book/book.model");
-const authToken = require("../../passport/authToken");
+const { findOneBookByISBN, getUsersBooks }= require("@models/book/book.model");
+const authToken = require("~/passport/authToken");
 
 router.get('/book/:isbn', authToken, async (req, res) => {
 	const userId = req.user;
@@ -10,7 +10,8 @@ router.get('/book/:isbn', authToken, async (req, res) => {
 	const params = req.params
 	const isbn = params.isbn
 
-	res.status(200).json(await findOneByISBN({isbn, fkUser: userId}));
+
+	res.status(200).json(await findOneBookByISBN({isbn, fkUser: userId}));
 	
 });
 

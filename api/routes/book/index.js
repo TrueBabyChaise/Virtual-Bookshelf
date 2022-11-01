@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const axios = require('axios');
-const authToken = require("../../passport/authToken");
-const { addBook, removeBookByISBN, updateBookByISBN, findOneByISBN} = require("../../models/book/book.model");
+const authToken = require("~/passport/authToken");
+const { createBookEntry, removeBookByISBN, updateBookByISBN, findOneBookByISBN} = require("@models/book/book.model");
 
 /**
  * 
@@ -45,9 +45,9 @@ router.post('/:isbn', authToken, async (req, res) => {
 		res.status(403).json({message: "Forbidden"})
 	else {
 		try {
-			const bookInfo = await getBookByISBN(isbn)
+			const bookInfo = await requestBookByISBN(isbn)
 			const title = bookInfo.title
-			const bookAdded = await addBook({title, isbn, status: 0, fkUser: userId})
+			const bookAdded = await createBookEntry({title, isbn, status: 0, fkUser: userId})
 			if (bookAdded)
 				res.status(200).json({bookAdded});
 			else
@@ -66,7 +66,7 @@ router.put('/:isbn', authToken, async (req, res) => {
 
 	try {
 		if (!newParams || !newParams.title) {
-			const book = await findOneByISBN({isbn, fkUser: userId})
+			const book = await findOneBookByISBN({isbn, fkUser: userId})
 			newParams = { title: book.officialTitle } 
 		}
 	} catch (error) {
