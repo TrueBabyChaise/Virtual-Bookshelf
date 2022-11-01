@@ -1,10 +1,9 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faBooks } from "@fortawesome/pro-regular-svg-icons"
+import { MdOutlineBook } from "react-icons/md"
 
 function NavigationTab ({title}) {
   return (
     <a href="#" className="flex text-slate-50">
-      <FontAwesomeIcon icon={faBooks} className="w-3" /> { title }
+      <MdOutlineBook className="w-5 h-5" /> { title }
     </a>
   )
 }
