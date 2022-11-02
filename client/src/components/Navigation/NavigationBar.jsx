@@ -1,17 +1,28 @@
 import NavigationTab from "@components/Navigation/NavigationTab"
+import { MdOutlineBook, MdOutlineLibraryAdd, MdOutlineSupervisedUserCircle } from "react-icons/md"
 
 function NavigationBar({}) {
   return (
-    <div className="max-w-[240px] w-full border-r dark:border-red-500">
-      <div className="flex flex-col">
-        <div className="h-[80px] flex">
-          <h1 className="text-center font-bold m-auto dark:text-slate-50">Bookshelf</h1>
-        </div>
+    <div className="flex flex-col items-center w-[240px] h-screen overflow-hidden border-r border-gray-700 px-2 sticky top-0">
+      <a href="#" className="flex items-center w-full px-3 py-4">
+        <p className="mx-auto text-lg font-bold text-slate-100">Bookshelf</p>
+      </a>
 
-        <div className="flex flex-col">
-          <NavigationTab title="Your collection" />
+      <div className="w-full">
+        <div className="flex flex-col items-center w-full">
+          <NavigationTab title="Your collection" 
+            Icon={MdOutlineBook} 
+            selected={true}
+            className="mt-3" />
+          <NavigationTab title="Add a book" 
+            Icon={MdOutlineLibraryAdd} />
+          
         </div>
       </div>
+
+      <NavigationTab title="Account" 
+        Icon={MdOutlineSupervisedUserCircle} 
+        className="mt-auto mb-2 justify-center" />
     </div>
   )
 }
