@@ -3,7 +3,6 @@ run-name: ${{ github.actor }} testing..
 on: [push]
 jobs:
   check-api-starting:
-    wokr
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
