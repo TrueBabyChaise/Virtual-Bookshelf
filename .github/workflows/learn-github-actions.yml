@@ -15,9 +15,6 @@ jobs:
         working-directory: ./api
         run: npm ci
         run: npm run dev
-
-
-jobs:
   check-client-starting:
     runs-on: ubuntu-latest
     steps:
