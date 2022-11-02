@@ -12,7 +12,7 @@ jobs:
           node-version: '16.x'
       - name: Install dependencies and starting
         working-directory: ./api
-        run: npm ci & npm run dev
+        run: npm install & npm run dev
   check-client-starting:
     runs-on: ubuntu-latest
     steps:
@@ -23,4 +23,4 @@ jobs:
           node-version: '16.x'
       - name: Install dependencies and starting
         working-directory: ./client
-        run: npm ci & npm start
+        run: npm install & npm start
