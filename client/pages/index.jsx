@@ -1,5 +1,7 @@
 import Head from 'next/head'
 import AppContainer from '@components/AppContainer'
+import BookList from "@components/Books/BookList"
+import BookListFilters from "@components/Books/BookListFilters"
 
 export default function Home() {
   return (
@@ -11,7 +13,8 @@ export default function Home() {
       </Head>
 
       <AppContainer>
-        <h1 className="dark:text-slate-50">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, quo adipisci inventore perspiciatis voluptas debitis, et aliquam at illo explicabo quasi maiores doloremque numquam molestiae omnis expedita. Amet, officiis atque!</h1>
+        <BookListFilters />
+        <BookList />
       </AppContainer>
     </>
   )
