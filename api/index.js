@@ -30,7 +30,7 @@ app.get('/api', (req, res) => {
     res.status(200).json({message : 'API is on'});
 });
 
-const port = process.env.PORT || 3000;
+const port = 3001;
 
 app.listen(port, () => {
     console.log("app listening on port", port);
