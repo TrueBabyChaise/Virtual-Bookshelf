@@ -10,9 +10,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '16.x'
-      - name: Install dependencies and starting
+      - name: Install dependencies
         working-directory: ./api
-        run: npm install & npm run dev
+        run: npm install
+      - name: Start Api
+        working-directory: ./api
+        run: npm run dev
+        
   check-client-starting:
     runs-on: ubuntu-latest
     steps:
@@ -23,4 +27,7 @@ jobs:
           node-version: '16.x'
       - name: Install dependencies and starting
         working-directory: ./client
-        run: npm install & npm start
+        run: npm install
+      - name: Starting Client
+        working-directory: ./client
+        run: npm start
