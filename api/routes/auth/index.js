@@ -14,7 +14,12 @@ router.post('/login', async (req, res) => {
 			const passCheck = await comparePassword(password, user.password)
 			if (passCheck) {
 				let token = jwt.sign(user._id.toJSON(), jwtOptions.secretOrKey);
-				res.status(200).json({ message : "User logged in", token: token });
+				return res.cookie("access_token", token, {
+					httpOnly: true,
+					secure: false
+				})
+				.status(200)
+				.json({ message : "User logged in"});
 			} else {
 				res.status(401).json({ message : "Wrong password" });
 			}
