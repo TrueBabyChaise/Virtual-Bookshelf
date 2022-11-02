@@ -9,7 +9,9 @@ router.post('/login', async (req, res) => {
 	if (!username || !password) {
 		res.status(401);
 	} else {
+		console.log("OKAY")
 		let user = await findOneByName(username);
+		console.log("OKAY")
 		if (user) {
 			const passCheck = await comparePassword(password, user.password)
 			if (passCheck) {
