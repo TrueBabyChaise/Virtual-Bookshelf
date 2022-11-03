@@ -1,40 +1,55 @@
 
 const User = require('@models/user/user.model');
 const mongoose = require('mongoose');
+const { getBookInfo } = require('@openlibrary');
+
 const Book = new mongoose.Schema({
-    title: {type: String, required:true},
-    officialTitle: {type: String, required:true},
-    isbn: {type: String, required:true},
-    status: {type: Number, required:true},
-    fkUser: {type: mongoose.ObjectId, required:true},
-    fkSerie: {type: mongoose.ObjectId}
+    title: {type: String, required: true},
+    isbn: {type: String, required: true},
+    author: {type: String, required: true},
+    contributors: {type: Map, of: String, required: true},
+    numberOfPages: {type: Number, required: true},
+    publisher: {type: String, required: true},
+    synopsis: {type: String, required: true},
+    language: {type: String, required: true},
+    imageS: {type: String, required:true},
+    imageM: {type: String, required:true},
+    imageL: {type: String, required:true},
+    bookUserInfos: [{type: mongoose.ObjectId, ref: 'bookUserInfo'}]
+});
+
+Book.pre('findOneAndDelete', function(next) {
+    console.log("HERE")
+    this.model('bookUserInfo').deleteMany({ fkBook: this._id }, function (err, result) {
+        if (err) {
+          console.log(`[error] ${err}`);
+          next(err);
+        } else {
+          console.log('success');
+          next();
+        }
+    })
 });
 
 const BookModel = mongoose.model('book', Book);
 
-async function findOneBookByISBN({isbn, fkUser}) {
-    const bookFound = await BookModel.find({ isbn, fkUser })
+async function findOneBookByISBN({isbn}) {
+    const bookFound = await BookModel.find({ isbn })
     if (bookFound.length)
         return bookFound[0];
     return undefined;
 }
 
-async function findAllBookOfUser({fkUser}) {
-    const bookFound = await BookModel.find({ fkUser })
+async function updateBookByISBN({isbn, newParams}) {
+    const bookFound = await BookModel.findOneAndUpdate({ isbn }, newParams)
     if (bookFound)
         return bookFound;
     return undefined;
 }
 
-async function removeBookByISBN({isbn, fkUser}) {
-    const bookFound = await BookModel.findOneAndDelete({ isbn, fkUser })
-    if (bookFound)
-        return bookFound;
-    return undefined;
-}
-
-async function updateBookByISBN({isbn, fkUser, newParams}) {
-    const bookFound = await BookModel.findOneAndUpdate({ isbn, fkUser }, newParams)
+async function removeBookByISBN({isbn}) {
+    console.log("TU DELETES UN TRUC NON ?")
+    const bookFound = await BookModel.findOneAndDelete({ isbn })
     if (bookFound)
         return bookFound;
     return undefined;
@@ -42,26 +57,18 @@ async function updateBookByISBN({isbn, fkUser, newParams}) {
 
 
 module.exports = {
-    Book,
     findOneBookByISBN,
-    removeBookByISBN,
     updateBookByISBN,
+    removeBookByISBN,
 
-    async createBookEntry({title, isbn, status, fkUser}) {
-        const bookFound = await findOneBookByISBN({isbn, fkUser});
+    async createBookEntry({isbn}) {
+        const bookFound = await findOneBookByISBN({isbn});
         if (!bookFound) {
-            const book = new BookModel({title, officialTitle: title, isbn, status, fkUser});
+            let bookData = await getBookInfo(isbn)
+            const book = new BookModel(bookData);
             book.save();
             return book;
         }
         return false;
     },
-
-    async getUsersBooks({ userId }) {
-        const bookFounds = await findAllBookOfUser({fkUser: userId});
-        if (!bookFounds) {
-            return false;
-        }
-        return bookFounds
-    }
 }

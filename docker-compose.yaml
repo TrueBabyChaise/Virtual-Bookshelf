@@ -13,6 +13,8 @@ services:
     networks:
       - database-net
       - back-net
+    logging:
+      driver: "none"
 
   api:
     container_name: API
@@ -26,6 +28,7 @@ services:
     volumes:
       - ./api/routes:/api/routes
       - ./api/models:/api/models
+      - ./api/openlibrary:/api/openlibrary
     ports:
       - 3001:3001
     networks:

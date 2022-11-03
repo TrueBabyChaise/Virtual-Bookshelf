@@ -1,6 +1,9 @@
 const router = require('express').Router();
 const { findOneBookByISBN, getUsersBooks }= require("@models/book/book.model");
 const authToken = require("~/passport/authToken");
+const book = require("./book");
+
+router.use('/book', book);
 
 router.get('/book/:isbn', authToken, async (req, res) => {
 	const userId = req.user;
