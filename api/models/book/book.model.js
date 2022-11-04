@@ -1,5 +1,4 @@
 
-const User = require('@models/user/user.model');
 const mongoose = require('mongoose');
 const { getBookInfo } = require('@openlibrary');
 
@@ -15,20 +14,6 @@ const Book = new mongoose.Schema({
     imageS: {type: String, required:true},
     imageM: {type: String, required:true},
     imageL: {type: String, required:true},
-    bookUserInfos: [{type: mongoose.ObjectId, ref: 'bookUserInfo'}]
-});
-
-Book.pre('findOneAndDelete', function(next) {
-    console.log("HERE")
-    this.model('bookUserInfo').deleteMany({ fkBook: this._id }, function (err, result) {
-        if (err) {
-          console.log(`[error] ${err}`);
-          next(err);
-        } else {
-          console.log('success');
-          next();
-        }
-    })
 });
 
 const BookModel = mongoose.model('book', Book);
@@ -48,11 +33,11 @@ async function updateBookByISBN({isbn, newParams}) {
 }
 
 async function removeBookByISBN({isbn}) {
-    console.log("TU DELETES UN TRUC NON ?")
-    const bookFound = await BookModel.findOneAndDelete({ isbn })
-    if (bookFound)
-        return bookFound;
-    return undefined;
+    const bookDeleted = await BookModel.findOneAndDelete({ isbn })
+    if (!bookDeleted)
+        return undefined;
+    await mongoose.model('bookUserInfo').deleteMany({fkBook: bookDeleted._id})
+    return bookDeleted;
 }
 
 

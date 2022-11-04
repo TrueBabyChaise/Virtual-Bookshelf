@@ -1,4 +1,3 @@
-
 const { createBookEntry, findOneBookByISBN } = require("@models/book/book.model");
 const mongoose = require('mongoose');
 const BookUserInfo = new mongoose.Schema({
