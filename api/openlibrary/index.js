@@ -67,21 +67,24 @@ async function requestBookByAuthor(author_link) {
     })
 }
 
-
 /**
     * 
     * @param {String} ISBN
     */
 async function getBookInfo(ISBN) {
     const bookInfoISBN = await requestBookByISBN(ISBN)
+    console.log(bookInfoISBN)
     const bookInfoWork = await requestBookByWork(bookInfoISBN.works[0].key)
+    console.log(bookInfoWork)
     const bookInfoAuthor = await requestBookByAuthor(bookInfoWork.authors[0].author.key)
+    console.log(bookInfoAuthor)
 
 
     let contributors = new Object()
-    bookInfoISBN.contributors.forEach(e => {
-        contributors[`${e.role}`] = e.name;
-    })
+    if (bookInfoISBN.contributors)
+        bookInfoISBN.contributors.forEach(e => {
+            contributors[`${e.role}`] = e.name;
+        })
 
     return {
         title: bookInfoISBN.title,
@@ -89,9 +92,9 @@ async function getBookInfo(ISBN) {
         author: bookInfoAuthor.name,
         contributors,
         numberOfPages: bookInfoISBN.number_of_pages,
-        publisher: bookInfoISBN.publishers[0],
-        synopsis: bookInfoWork.description.value,
-        language: bookInfoISBN.languages[0].key.replace('/languages/', ''),
+        publisher: bookInfoISBN.publishers ? bookInfoISBN.publishers[0] : "",
+        synopsis: bookInfoWork.description ? bookInfoWork.description.value : "",
+        language: bookInfoISBN.languages ? bookInfoISBN.languages[0].key.replace('/languages/', '') : "",
         imageS: `https://covers.openlibrary.org/b/isbn/${ISBN}-S.jpg`,
         imageM: `https://covers.openlibrary.org/b/isbn/${ISBN}-M.jpg`,
         imageL: `https://covers.openlibrary.org/b/isbn/${ISBN}-L.jpg`,

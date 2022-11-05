@@ -68,15 +68,13 @@ router.post('/:title/book/:isbn', authToken, async (req, res) => {
 		return
 	}
 
-	console.log({isbn, fkUser: userId})
-
 	const bookFound = await findOneBookByISBN({isbn, fkUser: userId})
 	if (!bookFound) {
 		res.status(422).json({message: "Book not found"});
 		return
 	}
 
-	const bookAdded = await addBookInSeries({title, fkUser: userId, book: bookFound._id})
+	const bookAdded = await addBookInSeries({title, fkUser: userId, bookId: bookFound._id})
 
 	if (bookAdded)
 		res.status(200).json({bookAdded});
