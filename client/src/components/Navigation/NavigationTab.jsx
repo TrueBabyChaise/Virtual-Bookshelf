@@ -6,7 +6,7 @@ function NavigationTab ({title, Icon, className = '', selected = false}) {
 
   return (
     <a href="#" className={`flex text-slate-100 py-3 px-3 my-1 hover:bg-gray-700 w-full rounded-lg ${className} ${selected ? selectedStyle : ''}`}>
-      <Icon className="w-6 h-6" /> <p className="ml-3 text-sm font-medium my-auto">{ title }</p>
+      <Icon className="w-6 h-6 mx-auto" />
     </a>
   )
 }
