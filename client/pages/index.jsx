@@ -13,6 +13,9 @@ export default function Home() {
       </Head>
 
       <AppContainer>
+        <header className="pb-10 pt-14">
+          <h1 className="text-4xl text-slate-100 font-bold">My Collection</h1>
+        </header>
         <BookListFilters />
         <BookList />
       </AppContainer>
