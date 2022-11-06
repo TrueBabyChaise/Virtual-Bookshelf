@@ -7,4 +7,18 @@
   html {
     font-family: 'Poppins', sans-serif;
   }
+
+  *::-webkit-scrollbar-track {
+    @apply bg-gray-900
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    @apply bg-gray-700
+  }
+
+  *::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    @apply bg-gray-700
+  }
 }
