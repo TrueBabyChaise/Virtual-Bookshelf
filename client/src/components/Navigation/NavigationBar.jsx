@@ -1,28 +1,35 @@
 import NavigationTab from "@components/Navigation/NavigationTab"
-import { MdOutlineBook, MdOutlineLibraryAdd, MdOutlineSupervisedUserCircle } from "react-icons/md"
+import { MdOutlineHome, MdOutlineLibraryAdd, MdOutlineSettings, MdOutlineSupervisedUserCircle } from "react-icons/md"
 
 function NavigationBar({}) {
   return (
-    <div className="flex flex-col items-center w-[240px] h-screen overflow-hidden border-r border-gray-700 px-2 sticky top-0">
-      <a href="#" className="flex items-center w-full px-3 py-4">
-        <p className="mx-auto text-lg font-bold text-slate-100">Bookshelf</p>
-      </a>
+    <div className="flex w-full h-[80px] sticky top-0 border-b border-gray-700">
+      <div className="flex items-center overflow-hidden px-4 container mx-auto">
+        <div className="pr-5 border-r border-gray-700">
+          <a href="#" className="flex items-center px-3 py-1 rounded bg-purple-900">
+            <p className="mx-auto text-lg font-bold text-slate-100">B</p>
+          </a>
+        </div>
 
-      <div className="w-full">
-        <div className="flex flex-col items-center w-full">
-          <NavigationTab title="Your collection" 
-            Icon={MdOutlineBook} 
-            selected={true}
-            className="mt-3" />
-          <NavigationTab title="Add a book" 
-            Icon={MdOutlineLibraryAdd} />
-          
+        <div className="pl-5">
+          <div className="flex items-center w-full gap-2">
+            <NavigationTab title="Your collection" 
+              Icon={MdOutlineHome} 
+              selected={true}
+              className="" />
+            <NavigationTab title="Add a book" 
+              Icon={MdOutlineLibraryAdd} />
+            
+          </div>
+        </div>
+
+        <div className="ml-auto flex justify-center gap-2">
+          <NavigationTab title="Account" 
+            Icon={MdOutlineSupervisedUserCircle} />
+          <NavigationTab title="Settings" 
+            Icon={MdOutlineSettings} />
         </div>
       </div>
-
-      <NavigationTab title="Account" 
-        Icon={MdOutlineSupervisedUserCircle} 
-        className="mt-auto mb-2 justify-center" />
     </div>
   )
 }
