@@ -6,8 +6,8 @@ function NavigationBar({}) {
     <div className="flex w-full h-[80px] sticky top-0 border-b border-gray-700">
       <div className="flex items-center overflow-hidden px-4 container mx-auto">
         <div className="pr-5 border-r border-gray-700">
-          <a href="#" className="flex items-center px-3 py-1 rounded bg-purple-900">
-            <p className="mx-auto text-lg font-bold text-slate-100">B</p>
+          <a href="#" className="flex items-center px-3 py-1 rounded bg-white">
+            <p className="mx-auto text-xl font-bold text-gray-900">B</p>
           </a>
         </div>
 
