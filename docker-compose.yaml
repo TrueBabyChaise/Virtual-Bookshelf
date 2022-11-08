@@ -1,0 +1,69 @@
+version: '3.2'
+
+services:
+
+  database:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - 27017:27017
+    networks:
+      - database-net
+      - back-net
+    logging:
+      driver: "none"
+
+  api:
+    container_name: API
+    build: 
+      context : ./api
+    image: virtual-bookshelf-api
+    environment:
+      MONGO_USER: ${MONGO_USER}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_DB: ${MONGO_DB}
+    volumes:
+      - ./api/routes:/api/routes
+      - ./api/models:/api/models
+      - ./api/openlibrary:/api/openlibrary
+    ports:
+      - 3001:3001
+    networks:
+      - front-net
+      - back-net
+    depends_on:
+      - database
+
+  client:
+    container_name: Client
+    build: 
+      context : ./client
+    image: virtual-bookshelf-client
+    ports:
+      - 3000:3000
+    networks:
+      - front-net
+    depends_on:
+      - api
+    
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    networks:
+      - database-net
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@database:27017/
+    depends_on:
+      - database
+
+networks:
+  back-net:
+  front-net:
+  database-net:
