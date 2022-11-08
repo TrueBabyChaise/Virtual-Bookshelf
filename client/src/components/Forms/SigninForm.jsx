@@ -2,7 +2,7 @@ import Input from "@src/ui/Forms/Input"
 import { useState } from "react"
 
 async function loginUser(credentials) {
-	return fetch('localhost:3001/api/auth/login', {
+	return fetch('/api/auth/login', {
 		method: 'POST',
 		headers : {
 			'Content-Type': 'application/json'
@@ -18,10 +18,7 @@ function SigninForm () {
 
   const handleSubmit = async e => {
 		e.preventDefault();
-		const res = await loginUser({
-			username,
-			password
-		})
+		const res = await loginUser(user)
 		alert(res.message);
 	}
 

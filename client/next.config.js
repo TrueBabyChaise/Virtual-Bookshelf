@@ -1,6 +1,13 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-}
 
-module.exports = nextConfig
+const rewritesConfig = [
+  {
+    source: "/api/:path*",
+    destination: 'http://localhost:3001/:path*',
+  },
+];
+
+module.exports = {
+  reactStrictMode: true,
+  rewrites: async () => rewritesConfig,
+};
