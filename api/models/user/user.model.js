@@ -3,7 +3,9 @@ const User = new mongoose.Schema({
     username: {type: String, required:true},
     password: {type: String, required:true},
     fkRole: {type: Number, required:true},
+    
 });
+
 const UserModel = mongoose.model('user', User);
 
 async function findOneByName(username) {
@@ -31,7 +33,7 @@ module.exports = {
             return true;
         }
         return false;
-        },
+    },
 
     async getUserRole({ userId }) {
         const userFound = await findOneById(userId);

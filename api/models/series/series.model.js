@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const Series = new mongoose.Schema({
     title: {type: String, required:true},
-    key: {type: String},
+    key: {type: [String], default: []},
     fkUser: {type: mongoose.ObjectId, required:true},
-    books: {type: [mongoose.ObjectId]}
+    books: {type: [mongoose.ObjectId], default: []}
 });
 
 const SeriesModel = mongoose.model('series', Series);
@@ -36,6 +36,14 @@ async function updateSeriesByTitle({title, fkUser, newParams}) {
     return undefined;
 }
 
+async function generateKeyBasedOnBooks(series, books) {
+    for (const id of series.books) {
+        series.key.addToSet((await mongoose.model('book').findById(id)).isbn.slice(0, 8))
+    }
+    series.save()
+}
+
+
 
 module.exports = {
     updateSeriesByTitle,
@@ -53,11 +61,12 @@ module.exports = {
         return false;
     },
 
-    async addBookInSeries({title, fkUser, book}) {
+    async addBookInSeries({title, fkUser, bookId}) {
         const seriesFound = await  findOneSeries({title, fkUser});
         if (!seriesFound) return false;
-
-        seriesFound.books.addToSet(book)
+        seriesFound.books.addToSet(bookId)
+        if (!seriesFound.key.length)
+            generateKeyBasedOnBooks(seriesFound)
         seriesFound.save()
         return seriesFound
     },
@@ -67,8 +76,12 @@ module.exports = {
         if (!seriesFound) return false;
 
         books.forEach(e => {
-            seriesFound.books.addToSet(e._id)
+            seriesFound.books.addToSet(e)
         })
+
+        console.log(seriesFound.key)
+        if (!seriesFound.key)
+            generateKeyBasedOnBooks(seriesFound)
         seriesFound.save()
         return seriesFound
     }
