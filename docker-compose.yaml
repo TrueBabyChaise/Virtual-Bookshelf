@@ -48,7 +48,10 @@ services:
       - front-net
     depends_on:
       - api
-    
+    volumes:
+      - ./client/src:/client/src
+      - ./client/pages:/client/pages
+
   mongo-express:
     image: mongo-express
     restart: always
