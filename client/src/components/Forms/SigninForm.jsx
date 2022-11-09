@@ -21,6 +21,7 @@ async function loginUser(credentials) {
           'Content-Type': 'application/json'
         },
         data : JSON.stringify(credentials),
+        withCredentials: true,
         validateStatus: function (status) {
           return status < 500; // Resolve only if the status code is less than 500
         }
