@@ -7,9 +7,10 @@ const jwtOptions = require("../../passport/jwtOptions");
 router.post('/login', async (req, res) => {
 	const { username, password } = req.body;
 	if (!username || !password) {
-		res.status(401);
+		res.status(401).json({ message: "Empty credentials"})
 	} else {
 		let user = await findOneByName(username);
+		console.log(user);
 		if (user) {
 			const passCheck = await comparePassword(password, user.password)
 			if (passCheck) {
