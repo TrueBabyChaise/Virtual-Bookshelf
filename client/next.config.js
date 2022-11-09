@@ -5,8 +5,8 @@ module.exports = {
   async rewrites() {
     return {
       beforeFiles: [
-        { source: '/api/', destination: 'http://api:3001/api' },
-        { source: '/api/:path*', destination: 'http://api:3001/api/:path*' },
+        { source: '/api/', destination: 'http://localhost:3001/api' },
+        { source: '/api/:path*', destination: 'http://localhost:3001/api/:path*' },
       ],
     };
   },
