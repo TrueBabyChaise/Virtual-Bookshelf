@@ -17,7 +17,7 @@ services:
       driver: "none"
 
   api:
-    container_name: API
+    container_name: api
     build: 
       context : ./api
     image: virtual-bookshelf-api

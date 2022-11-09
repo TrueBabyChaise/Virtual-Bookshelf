@@ -1,8 +1,10 @@
 import Input from "@src/ui/Forms/Input"
+import { validateConfig } from "next/dist/server/config-shared";
 import { useState } from "react"
+const axios = require('axios');
 
 async function loginUser(credentials) {
-	return fetch('localhost:3001/api/auth/login', {
+/*	return fetch('http:localhost:3001/api/', {
 		method: 'POST',
 		headers : {
 			'Content-Type': 'application/json'
@@ -10,7 +12,31 @@ async function loginUser(credentials) {
 		body: JSON.stringify(credentials)
 	})
 	.then(data => data.json())
+}*/
+    return new Promise(function (resolve, reject) {
+      var config = {
+        method: 'post',
+        url: 'http://localhost:3001/api/auth/login',
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        data : JSON.stringify(credentials),
+        withCredentials: true,
+        validateStatus: function (status) {
+          return status < 500; // Resolve only if the status code is less than 500
+        }
+      };
+      
+      axios(config)
+      .then(function (response) {
+        resolve(response);
+      })
+      .catch(function (error) {
+        resolve(error)
+      });
+  })
 }
+
 
 function SigninForm () {
 
@@ -18,11 +44,9 @@ function SigninForm () {
 
   const handleSubmit = async e => {
 		e.preventDefault();
-		const res = await loginUser({
-			username,
-			password
-		})
-		alert(res.message);
+		const {data, status} = await loginUser(user)
+    //if (status > 299)
+		alert(data.message);
 	}
 
   return (

@@ -12,9 +12,12 @@ const routes = require('./routes');
 const app = express();
 
 app.use(
-        cors({origin: '*'})
+        cors({origin: '*', credentials: true, origin: true})
 );
 
+/*app.use(
+        cors({origin: '*'})
+);*/
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

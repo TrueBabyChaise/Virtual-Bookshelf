@@ -24,7 +24,7 @@ router.get('/books/', authToken, async (req, res) => {
 	if (!userId)
 		res.status(403).json({message: "Forbidden"})
 	else
-		res.status(200).json(await getUsersBooks({userId}));
+		res.status(200).json({message: "Not implemented"});
 });
 
 module.exports = router
