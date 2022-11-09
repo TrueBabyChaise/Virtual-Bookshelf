@@ -1,13 +1,14 @@
 /** @type {import('next').NextConfig} */
 
-const rewritesConfig = [
-  {
-    source: "/api/:path*",
-    destination: 'http://localhost:3001/:path*',
-  },
-];
-
 module.exports = {
   reactStrictMode: true,
-  rewrites: async () => rewritesConfig,
+  async rewrites() {
+    return {
+      beforeFiles: [
+        { source: '/api/', destination: 'http://api:3001/api' },
+        { source: '/api/:path*', destination: 'http://api:3001/api/:path*' },
+      ],
+    };
+  },
+  trailingSlash: true,
 };
