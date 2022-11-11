@@ -1,10 +1,13 @@
 import NavigationTab from "@components/Navigation/NavigationTab"
 import Search from "@components/Search/Search"
 import { useState } from "react"
+import { useAuth } from "@hooks/useAuth"
 import { MdOutlineHome, MdOutlineLibraryAdd, MdOutlineSettings, MdOutlineSupervisedUserCircle } from "react-icons/md"
 
 function NavigationBar({}) {
   const [searchOpened, setSearchOpened] = useState(false)
+  const { user } = useAuth()
+  console.log(user)
 
   const handleAddBook = () => {
     setSearchOpened(prev => !prev)
@@ -22,11 +25,11 @@ function NavigationBar({}) {
 
           <div className="pl-5">
             <div className="flex items-center w-full gap-2">
-              <NavigationTab title="Your collection" 
+              <NavigationTab subtitle="Your collection" 
                 Icon={MdOutlineHome} 
                 selected={true}
                 className="" />
-              <NavigationTab title="Add a book" 
+              <NavigationTab subtitle="Add a book" 
                 handleAction={handleAddBook}
                 Icon={MdOutlineLibraryAdd} />
               
@@ -34,14 +37,15 @@ function NavigationBar({}) {
           </div>
 
           <div className="ml-auto flex justify-center gap-2">
-            <NavigationTab title="Account" 
+            
+            <NavigationTab title={ user.user.username }
               Icon={MdOutlineSupervisedUserCircle} />
-            <NavigationTab title="Settings" 
+            <NavigationTab subtitle="Settings" 
               Icon={MdOutlineSettings} />
           </div>
         </div>
       </div>
-      { searchOpened && <Search /> }
+      { searchOpened && <Search setOpened={setSearchOpened} /> }
     </>
   )
 }

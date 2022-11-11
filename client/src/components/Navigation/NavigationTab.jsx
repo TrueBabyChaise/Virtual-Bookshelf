@@ -7,7 +7,7 @@ function NavigationTab ({title, Icon, className = '', selected = false, handleAc
   return (
     <button className={`flex text-slate-100 py-3 px-3 my-1 hover:bg-gray-700 w-full rounded-lg ${className} ${selected ? selectedStyle : ''}`}
       onClick={handleAction}>
-      <Icon className="w-6 h-6 mx-auto" />
+      { title && (<span className="mr-2">{title}</span>) } <Icon className="w-6 h-6 mx-auto" /> 
     </button>
   )
 }

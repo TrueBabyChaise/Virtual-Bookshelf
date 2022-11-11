@@ -120,7 +120,7 @@ router.post('/search/:title', authToken, async (req, res) => {
 	const params = req.params
 	const body = req.body
 	const title = params.title
-	let limit = 10
+	let limit = 20
 
 	if (body && body.limit && parseInt(body.limit) != NaN)
 		limit = parseInt(body.limit)

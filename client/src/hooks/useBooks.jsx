@@ -1,10 +1,8 @@
 import React, { useState, useContext, createContext, useEffect } from "react"
 import apiAxios from "@src/configs/api"
 
-function useBooks() {
-	const [user, setUser] = useState(null)
-	const [loading, setLoading] = useState(true)
-
+export default function useBooks() {
+	const [loading, setLoading] = useState(false)
 
 	/**
 		* Function to recover a book
@@ -12,6 +10,7 @@ function useBooks() {
 		*/
 	const getBookISBN = async (isbn) => {
 		// Get an user's book
+		setLoading(true)
 		try {
 			const data = await apiAxios(`book/isbn/${isbn}`, 'GET')
 			setLoading(false)
@@ -28,6 +27,7 @@ function useBooks() {
 		*/
 	const createBookEntry = async (isbn) => {
 		// Create a new book entry
+		setLoading(true)
 		try {
 			const data = await apiAxios(`book/isbn/${isbn}`, 'POST')
 			setLoading(false)
@@ -44,6 +44,7 @@ function useBooks() {
 		*/
 	const renameBookISBN = async (isbn) => {
 		// Rename an user's book
+		setLoading(true)
 		try {
 			const data = await apiAxios(`book/isbn/${isbn}`, 'PUT')
 			setLoading(false)
@@ -60,6 +61,7 @@ function useBooks() {
 		*/
 	const deleteBookISBN = async (isbn) => {
 		// Delete an user's book
+		setLoading(true)
 		try {
 			const data = await apiAxios(`book/isbn/${isbn}`, 'DELETE')
 			setLoading(false)
@@ -76,6 +78,7 @@ function useBooks() {
 		*/
 	const getBook = async (bookId) => {
 		// Delete an user's book
+		setLoading(true)
 		try {
 			const data = await apiAxios(`book/${bookId}`, 'DELETE')
 			setLoading(false)
@@ -93,6 +96,7 @@ function useBooks() {
 		*/
 	const renameBook = async (bookId) => {
 		// Delete an user's book
+		setLoading(true)
 		try {
 			const data = await apiAxios(`book/${bookId}`, 'DELETE')
 			setLoading(false)
@@ -109,6 +113,7 @@ function useBooks() {
 		*/
 	const deleteBook = async (bookId) => {
 		// Delete an user's book
+		setLoading(true)
 		try {
 			const data = await apiAxios(`book/${bookId}`, 'DELETE')
 			setLoading(false)
@@ -117,5 +122,30 @@ function useBooks() {
 			setLoading(false)
 			throw error
 		}
+	}
+
+	const searchBook = async (searchValue) => {
+		setLoading(true)
+		try {
+			const data = await apiAxios(`book/search/${searchValue}`, 'POST')
+			console.log(data)
+			setLoading(false)
+			return data
+		} catch (error) {
+			setLoading(false)
+			throw error
+		}
+	}
+
+	return {
+		loading,
+		getBookISBN,
+		createBookEntry,
+		renameBookISBN,
+		deleteBookISBN,
+		getBook,
+		renameBook,
+		deleteBook,
+		searchBook
 	}
 }

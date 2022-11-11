@@ -1,4 +1,4 @@
-const { createUser, findOneByEmail } = require("../../models/user/user.model");
+const { createUser, findOneByEmail, findOneById } = require("../../models/user/user.model");
 const { createHash, comparePassword } = require("../../bcrypt");
 const authToken = require("~/passport/authToken");
 const router = require('express').Router();
@@ -7,7 +7,12 @@ const jwtOptions = require("../../passport/jwtOptions");
 
 
 router.get('/still_alive', authToken, async (req, res) => {
-	res.status(200).json({ message: "Still Alive !"})
+	const user = await findOneById(req.user)
+	if (!user) {
+		res.status(400).json({ message: "Dead !"})
+	} else {
+		res.status(200).json({ message: "Still Alive !", user})
+	}
 });
 
 router.post('/login', async (req, res) => {
