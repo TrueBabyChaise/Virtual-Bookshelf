@@ -1,70 +1,52 @@
 import Input from "@src/ui/Forms/Input"
-import { validateConfig } from "next/dist/server/config-shared";
-import { useState } from "react"
-const axios = require('axios');
+import Router from 'next/router'
+import { useAuth } from "@hooks/useAuth"
+import { useEffect } from "react"
 
-async function loginUser(credentials) {
-/*	return fetch('http:localhost:3001/api/', {
-		method: 'POST',
-		headers : {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(credentials)
-	})
-	.then(data => data.json())
-}*/
-    return new Promise(function (resolve, reject) {
-      var config = {
-        method: 'post',
-        url: 'http://localhost:3001/api/auth/login',
-        headers: { 
-          'Content-Type': 'application/json'
-        },
-        data : JSON.stringify(credentials),
-        withCredentials: true,
-        validateStatus: function (status) {
-          return status < 500; // Resolve only if the status code is less than 500
-        }
-      };
-      
-      axios(config)
-      .then(function (response) {
-        resolve(response);
-      })
-      .catch(function (error) {
-        resolve(error)
-      });
-  })
-}
-
+// async function loginUser(credentials) {
+//   await axios.post("auth/login", credentials).then(
+//     async (r) => {
+//       if (r.data)
+//         console.log(r.data)
+//     },
+//     (err) => { throw err.response.data}
+//   )
+// }
 
 function SigninForm () {
-
-  const [user, setUser] = useState({username: '', password: ''})
-
+  const {user, signin} = useAuth()
+  
   const handleSubmit = async e => {
-		e.preventDefault();
-		const {data, status} = await loginUser(user)
-    //if (status > 299)
-		alert(data.message);
+    e.preventDefault();
+    try {
+      const credentials = new FormData(e.target)
+      const email = credentials.get('email')
+      const password = credentials.get('password')
+      await signin(email, password)
+      Router.push('/')
+    } catch (err) {
+      console.log(err)
+    }
 	}
 
+  useEffect(() => {
+    if(user) {
+      Router.replace('/')
+    }
+  }, [user])
+
   return (
-    <div>dddd
+    <div>
       <form onSubmit={handleSubmit}>
-        <Input label="Username" 
-          name="username" 
-          type="text" 
+        <Input label="Email" 
+          name="email" 
+          type="email" 
           placeholder="john@doe.com" 
-          className="my-2" 
-          value={user.username}
-          onChange={e => setUser({...user, username: e.target.value})}/>
+          className="my-2" />
         <Input label="Password" 
           name="password" 
           type="password"
-          className="my-2" 
-          value={user.password}
-          onChange={e => setUser({...user, password: e.target.value})}/>
+          className="my-2" />
 
           <input type="submit" value="Submit" />
       </form>
