@@ -13,7 +13,8 @@ export default async function apiAxios(url, method = 'GET', data) {
 	if (data) config.data = JSON.stringify(data)
 	return new Promise((resolve, reject) => {
 		axios(config).then(response => {
-			resolve(response.data.length ? response.data : {})
+			console.log(response)
+			resolve(response.data ? response.data : {})
 		}, error => {
 			if (error.response) {
 				// The request was made and the server responded with a status code

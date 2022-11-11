@@ -32,6 +32,7 @@ async function findOneById(_id) {
 module.exports = {
     findOneByName,
     findOneByEmail,
+    findOneById,
 
     async createUser({email, username, password}) {
         const userFound = await findOneByEmail(email);

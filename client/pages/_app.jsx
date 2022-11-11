@@ -23,9 +23,6 @@ function UserConfig({ children, pageProps }) {
       )
   }
 
-
-  console.log(pageProps.protected, auth.user, auth.loading)
-
   if (pageProps.protected && auth.user === null && !auth.loading) {
     Router.replace('/login')
     return <></>
