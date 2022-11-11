@@ -4,7 +4,7 @@ const { getBookInfo } = require('@openlibrary');
 
 const Book = new mongoose.Schema({
     title: {type: String, required: true},
-    isbn: {type: String, required: true},
+    isbn: {type: String, required: true, unique: true},
     author: {type: String, default: ""},
     contributors: {type: Map, of: String,  default: {}},
     numberOfPages: {type: Number, default: 0},

@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const authToken = require("~/passport/authToken");
+const { processUserQuery } = require("~/openlibrary/");
 const { createBookEntry, removeBookByISBN, updateBookByISBN, findOneBookByISBN,
 		removeBook, updateBook, findOneBook
 } = require("@models/book/book.model");
@@ -113,6 +114,22 @@ router.delete('/:id', authToken, async (req, res) => {
 	} catch (error) {
 		res.status(422).json({message: "Wrong ISBN"});
 	}
+});
+
+router.post('/search/:title', authToken, async (req, res) => {
+	const params = req.params
+	const body = req.body
+	const title = params.title
+	let limit = 10
+
+	if (body && body.limit && parseInt(body.limit) != NaN)
+		limit = parseInt(body.limit)
+
+	const response = await processUserQuery(title, limit)
+	if (response)
+		res.status(200).json(response);
+	else
+		res.status(422).json({message: "Something weird happened"});
 });
 
 module.exports = router

@@ -101,7 +101,57 @@ async function getBookInfo(ISBN) {
     }
 }
 
+/**
+    * 
+    * @param {String} query 
+    * @param {Number} limit 
+    */
+async function searchBooks(query, limit) {
+    return new Promise(function (resolve, reject) {
+        var config = {
+            method: 'get',
+            url: `https://openlibrary.org/search.json?q=${query}&limit=${limit}`,
+            headers: {}
+        };
+
+        axios(config)
+            .then(function (response) {
+                resolve(response.data);
+            })
+            .catch(function (error) {
+                reject(error);
+            });
+    })
+}
+
+
+function foundISBN13(isbns) {
+    for (let i = 0; i < isbns.length; i++) {
+        if (isbns[i].length == 13)
+            return isbns[i]
+    }
+    return isbns[isbns.length - 1];
+}
+
+async function processUserQuery(query, limit=10) {
+    const response = await searchBooks(query, limit)
+    const books = new Array()
+
+    if (!response.docs) return false
+
+    for (let i = 0; i < response.docs.length; i++) {
+        const element = response.docs[i]
+        books.push({title: element.title, isbn: foundISBN13(element.isbn)});
+    }
+
+    return {
+        books
+    }
+}
+
+
 
 module.exports = {
-    getBookInfo
+    getBookInfo,
+    processUserQuery
 }
