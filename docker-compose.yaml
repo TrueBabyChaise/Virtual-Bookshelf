@@ -28,6 +28,7 @@ services:
     volumes:
       - ./api/routes:/api/routes
       - ./api/models:/api/models
+      - ./api/passport:/api/passport
       - ./api/openlibrary:/api/openlibrary
     ports:
       - 3001:3001

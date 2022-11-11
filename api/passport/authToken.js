@@ -7,7 +7,7 @@ module.exports = function authToken(req, res, next) {
 
     jwt.verify(authcookie, jwtOptions.secretOrKey, (err, user) => {
         if (err) return res.sendStatus(403);
-        req.user = user;
+        req.user = user.id;
         next();
     });
 }

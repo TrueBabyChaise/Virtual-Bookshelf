@@ -2,11 +2,18 @@ const mongoose = require('mongoose');
 const User = new mongoose.Schema({
     username: {type: String, required:true},
     password: {type: String, required:true},
+    email: {type: String, required:true, unique: true},
     fkRole: {type: Number, required:true},
-    
 });
 
 const UserModel = mongoose.model('user', User);
+
+async function findOneByEmail(email) {
+    const userFound = await UserModel.find({ email })
+    if (userFound.length)
+        return userFound[0];
+    return undefined;
+}
 
 async function findOneByName(username) {
     const userFound = await UserModel.find({ username })
@@ -24,11 +31,12 @@ async function findOneById(_id) {
 
 module.exports = {
     findOneByName,
+    findOneByEmail,
 
-    async createUser({username, password}) {
-        const userFound = await findOneByName(username);
+    async createUser({email, username, password}) {
+        const userFound = await findOneByEmail(email);
         if (!userFound) {
-            const user = new UserModel({username, password, fkRole:0});
+            const user = new UserModel({email, username, password, fkRole:0});
             user.save();
             return true;
         }
