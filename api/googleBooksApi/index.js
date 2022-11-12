@@ -48,11 +48,11 @@ async function requestBookByWork(work_link) {
     * 
     * @param {String} author_link 
     */
-async function requestBookByAuthor(author_link) {
+async function requestGoogleInfoPage(link) {
     return new Promise(function (resolve, reject) {
         var config = {
             method: 'get',
-            url: `https://openlibrary.org/${author_link}.json`,
+            url: `${link}`,
             headers: {}
         };
 
@@ -112,12 +112,18 @@ function foundISBN10(isbns) {
 async function getBookInfo(ISBN) {
     const ISBNItemInfo = await requestBookByISBN(ISBN)
     const volumeInfo = ISBNItemInfo.volumeInfo
+    let bookCover = ""
 
-    let bookCover = await requestAmazonPage(foundISBN10(ISBNItemInfo.volumeInfo.industryIdentifiers))
+    try {
+        bookCover = await requestAmazonPage(foundISBN10(ISBNItemInfo.volumeInfo.industryIdentifiers))
 
-    bookCover = bookCover.substring(bookCover.indexOf('src="https://m.media-amazon.com/images/I/', bookCover.indexOf(`.jpg" onload="this.onload='';setCSMReq('af')`) - 200), bookCover.indexOf(`.jpg" onload="this.onload='';setCSMReq('af')`) + 5)
-    bookCover = bookCover.replace('src="', '').replace('"', '')
-    bookCover = "https://m.media-amazon.com/images/I/" + bookCover.split('/I/')[1].split('.')[0] + ".jpg";
+        bookCover = bookCover.substring(bookCover.indexOf('src="https://m.media-amazon.com/images/I/', bookCover.indexOf(`.jpg" onload="this.onload='';setCSMReq('af')`) - 200), bookCover.indexOf(`.jpg" onload="this.onload='';setCSMReq('af')`) + 5)
+        bookCover = bookCover.replace('src="', '').replace('"', '')
+        bookCover = "https://m.media-amazon.com/images/I/" + bookCover.split('/I/')[1].split('.')[0] + ".jpg";
+    } catch (error) {
+       
+        bookCover = `https://books.google.com/books/publisher/content/images/frontcover/${ISBNItemInfo.id}?fife=w500-h500`
+    }
 
     return {
         title: volumeInfo.title,
