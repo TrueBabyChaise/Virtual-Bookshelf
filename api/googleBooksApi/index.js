@@ -68,13 +68,56 @@ async function requestBookByAuthor(author_link) {
 
 /**
     * 
+    * @param {String} author_link 
+    */
+ async function requestAmazonPage(ISBN_10) {
+    return new Promise(function (resolve, reject) {
+        var config = {
+            method: 'get',
+            url: `https://www.amazon.com/dp/${ISBN_10}`,
+            headers: {}
+        };
+
+        axios(config)
+            .then(function (response) {
+                resolve(response.data);
+            })
+            .catch(function (error) {
+                reject(error);
+            });
+    })
+}
+
+
+function foundISBN13(isbns) {
+    for (let i = 0; i < isbns.length; i++) {
+        if (isbns[i].type == "ISBN_13")
+            return isbns[i].identifier
+    }
+    return isbns[isbns.length - 1].identifier;
+}
+
+function foundISBN10(isbns) {
+    for (let i = 0; i < isbns.length; i++) {
+        if (isbns[i].type == "ISBN_10")
+            return isbns[i].identifier
+    }
+    return isbns[isbns.length - 1].identifier;
+}
+
+/**
+    * 
     * @param {String} ISBN
     */
 async function getBookInfo(ISBN) {
     const ISBNItemInfo = await requestBookByISBN(ISBN)
     const volumeInfo = ISBNItemInfo.volumeInfo
 
-    console.log(volumeInfo)
+    let bookCover = await requestAmazonPage(foundISBN10(ISBNItemInfo.volumeInfo.industryIdentifiers))
+
+    bookCover = bookCover.substring(bookCover.indexOf('src="https://m.media-amazon.com/images/I/', bookCover.indexOf(`.jpg" onload="this.onload='';setCSMReq('af')`) - 200), bookCover.indexOf(`.jpg" onload="this.onload='';setCSMReq('af')`) + 5)
+    bookCover = bookCover.replace('src="', '').replace('"', '')
+    bookCover = "https://m.media-amazon.com/images/I/" + bookCover.split('/I/')[1].split('.')[0] + ".jpg";
 
     return {
         title: volumeInfo.title,
@@ -88,7 +131,7 @@ async function getBookInfo(ISBN) {
         synopsis: volumeInfo.description ? volumeInfo.description : "",
         language: volumeInfo.language ? volumeInfo.language : "",
         smallThumbnail: volumeInfo.imageLinks.smallThumbnail,
-        thumbnail: volumeInfo.imageLinks.thumbnail,
+        thumbnail: bookCover,
     }
 }
 
@@ -116,13 +159,7 @@ async function searchBooks(query, limit) {
 }
 
 
-function foundISBN13(isbns) {
-    for (let i = 0; i < isbns.length; i++) {
-        if (isbns[i].type == "ISBN_13")
-            return isbns[i].identifier
-    }
-    return isbns[isbns.length - 1].identifier;
-}
+
 
 async function processUserQuery(query, limit=30) {
     const response = await searchBooks(query, limit)
