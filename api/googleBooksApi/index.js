@@ -8,14 +8,13 @@ async function requestBookByISBN(isbn) {
     return new Promise(function (resolve, reject) {
         var config = {
             method: 'get',
-            url: `https://openlibrary.org/isbn/${isbn}.json`,
+            url: `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&projection=full`,
             headers: {}
         };
 
         axios(config)
             .then(function (response) {
-
-                resolve(response.data);
+                resolve(response.data.items[0]);
             })
             .catch(function (error) {
                 reject(error);
@@ -72,32 +71,24 @@ async function requestBookByAuthor(author_link) {
     * @param {String} ISBN
     */
 async function getBookInfo(ISBN) {
-    const bookInfoISBN = await requestBookByISBN(ISBN)
-    console.log(bookInfoISBN)
-    const bookInfoWork = await requestBookByWork(bookInfoISBN.works[0].key)
-    console.log(bookInfoWork)
-    const bookInfoAuthor = await requestBookByAuthor(bookInfoWork.authors[0].author.key)
-    console.log(bookInfoAuthor)
+    const ISBNItemInfo = await requestBookByISBN(ISBN)
+    const volumeInfo = ISBNItemInfo.volumeInfo
 
-
-    let contributors = new Object()
-    if (bookInfoISBN.contributors)
-        bookInfoISBN.contributors.forEach(e => {
-            contributors[`${e.role}`] = e.name;
-        })
+    console.log(volumeInfo)
 
     return {
-        title: bookInfoISBN.title,
+        title: volumeInfo.title,
         isbn: ISBN,
-        author: bookInfoAuthor.name,
-        contributors,
-        numberOfPages: bookInfoISBN.number_of_pages,
-        publisher: bookInfoISBN.publishers ? bookInfoISBN.publishers[0] : "",
-        synopsis: bookInfoWork.description ? bookInfoWork.description.value : "",
-        language: bookInfoISBN.languages ? bookInfoISBN.languages[0].key.replace('/languages/', '') : "",
-        imageS: `https://covers.openlibrary.org/b/isbn/${ISBN}-S.jpg?default=false`,
-        imageM: `https://covers.openlibrary.org/b/isbn/${ISBN}-M.jpg?default=false`,
-        imageL: `https://covers.openlibrary.org/b/isbn/${ISBN}-L.jpg?default=false`,
+        authors: volumeInfo.authors,
+        categories: volumeInfo.categories,
+        maturityRating: volumeInfo.maturityRating,
+        numberOfPages: volumeInfo.pageCount,
+        publisher: volumeInfo.publisher ? volumeInfo.publisher : "",
+        publishedDate: volumeInfo.publishedDate ? volumeInfo.publishedDate : "",
+        synopsis: volumeInfo.description ? volumeInfo.description : "",
+        language: volumeInfo.language ? volumeInfo.language : "",
+        smallThumbnail: volumeInfo.imageLinks.smallThumbnail,
+        thumbnail: volumeInfo.imageLinks.thumbnail,
     }
 }
 
@@ -155,7 +146,6 @@ async function processUserQuery(query, limit=30) {
 
     return {
         books,
-        query: `https://www.googleapis.com/books/v1/volumes?q=${query}`
     }
 }
 
