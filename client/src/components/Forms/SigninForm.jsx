@@ -23,7 +23,6 @@ function SigninForm () {
       const email = credentials.get('email')
       const password = credentials.get('password')
       await signin(email, password)
-      Router.push('/')
     } catch (err) {
       console.log(err)
     }
