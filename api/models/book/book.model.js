@@ -76,9 +76,11 @@ module.exports = {
         const bookFound = await findOneBookByISBN({isbn});
         if (!bookFound) {
             let bookData = await getBookInfo(isbn)
-            const book = new BookModel(bookData);
-            book.save();
-            return book;
+            if (bookData.isbn) {
+                const book = new BookModel(bookData);
+                book.save();
+                return book;
+            }
         }
         return false;
     },

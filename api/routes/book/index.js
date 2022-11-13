@@ -27,7 +27,6 @@ router.post('/isbn/:isbn', authToken, async (req, res) => {
 	const bookAdded = await createBookEntry({isbn})
 
 	try {
-		console.log("LOL ?")
 		if (bookAdded)
 			res.status(200).json(bookAdded);
 		else

@@ -11,7 +11,7 @@ router.get('/still_alive', authToken, async (req, res) => {
 	if (!user) {
 		res.status(400).json({ message: "Dead !"})
 	} else {
-		res.status(200).json({ message: "Still Alive !", user})
+		res.status(200).json({ message: "Still Alive !", user: {username: user.username}})
 	}
 });
 

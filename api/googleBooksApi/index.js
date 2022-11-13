@@ -48,7 +48,7 @@ async function requestBookByWork(work_link) {
     * 
     * @param {String} author_link 
     */
-async function requestGoogleInfoPage(link) {
+async function requestUrl(link) {
     return new Promise(function (resolve, reject) {
         var config = {
             method: 'get',
@@ -113,16 +113,24 @@ async function getBookInfo(ISBN) {
     const ISBNItemInfo = await requestBookByISBN(ISBN)
     const volumeInfo = ISBNItemInfo.volumeInfo
     let bookCover = ""
-
+    // GOOGLE IMAGE SEARCH "https://www.google.com/search?q=${ISBN}&source=lnms&tbm=isch&sa=X&ved=2ahUKEwie44_AnqLpAhUhBWMBHUFGD90Q_AUoAXoECBUQAw&biw=1920&bih=947"
+    
     try {
-        bookCover = await requestAmazonPage(foundISBN10(ISBNItemInfo.volumeInfo.industryIdentifiers))
-
-        bookCover = bookCover.substring(bookCover.indexOf('src="https://m.media-amazon.com/images/I/', bookCover.indexOf(`.jpg" onload="this.onload='';setCSMReq('af')`) - 200), bookCover.indexOf(`.jpg" onload="this.onload='';setCSMReq('af')`) + 5)
-        bookCover = bookCover.replace('src="', '').replace('"', '')
-        bookCover = "https://m.media-amazon.com/images/I/" + bookCover.split('/I/')[1].split('.')[0] + ".jpg";
+        bookCover = `https://pictures.abebooks.com/isbn/${ISBN}.jpg`
+        await requestUrl(bookCover)
     } catch (error) {
-       
-        bookCover = `https://books.google.com/books/publisher/content/images/frontcover/${ISBNItemInfo.id}?fife=w500-h500`
+        try {
+            bookCover = await requestAmazonPage(foundISBN10(ISBNItemInfo.volumeInfo.industryIdentifiers))
+    
+            bookCover = bookCover.substring(
+                bookCover.indexOf('src="https://m.media-amazon.com/images/I/', bookCover.indexOf(`.jpg" onload="this.onload='';setCSMReq('af')`) - 200), 
+                bookCover.indexOf(`.jpg" onload="this.onload='';setCSMReq('af')`) + 5
+            )
+            bookCover = bookCover.replace('src="', '').replace('"', '')
+            bookCover = "https://m.media-amazon.com/images/I/" + bookCover.split('/I/')[1].split('.')[0] + ".jpg";
+        } catch (error) {
+            bookCover = `https://books.google.com/books/publisher/content/images/frontcover/${ISBNItemInfo.id}?fife=w500-h500`
+        }
     }
 
     return {
