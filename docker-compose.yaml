@@ -29,7 +29,7 @@ services:
       - ./api/routes:/api/routes
       - ./api/models:/api/models
       - ./api/passport:/api/passport
-      - ./api/openlibrary:/api/openlibrary
+      - ./api/googleBooksApi:/api/googleBooksApi
     ports:
       - 3001:3001
     networks:

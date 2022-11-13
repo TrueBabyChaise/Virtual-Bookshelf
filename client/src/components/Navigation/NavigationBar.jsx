@@ -7,7 +7,6 @@ import { MdOutlineHome, MdOutlineLibraryAdd, MdOutlineSettings, MdOutlineSupervi
 function NavigationBar({}) {
   const [searchOpened, setSearchOpened] = useState(false)
   const { user } = useAuth()
-  console.log(user)
 
   const handleAddBook = () => {
     setSearchOpened(prev => !prev)
@@ -38,7 +37,7 @@ function NavigationBar({}) {
 
           <div className="ml-auto flex justify-center gap-2">
             
-            <NavigationTab title={ user.user.username }
+            <NavigationTab title={ user.username }
               Icon={MdOutlineSupervisedUserCircle} />
             <NavigationTab subtitle="Settings" 
               Icon={MdOutlineSettings} />

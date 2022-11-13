@@ -6,7 +6,7 @@ import BookListFilters from "@components/Books/BookListFilters"
 export default function Home() {
 
   const books = [
-    {title: 'ノーゲーム･ノーライフ 1', cover: '/ngnl-covers/ngnl_tome_1.jpg'},
+    {title: 'ノーゲーム･ノーライフ 1', cover: 'https://m.media-amazon.com/images/I/518zfvvGToS.jpg'},
     {title: 'ノーゲーム･ノーライフ 2', cover: '/ngnl-covers/ngnl_tome_2.jpg'},
     {title: 'ノーゲーム･ノーライフ 3', cover: '/ngnl-covers/ngnl_tome_3.jpg'},
     {title: 'ノーゲーム･ノーライフ 4', cover: '/ngnl-covers/ngnl_tome_4.jpg'},

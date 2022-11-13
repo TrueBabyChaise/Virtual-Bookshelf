@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const authToken = require("~/passport/authToken");
-const { processUserQuery } = require("~/openlibrary/");
+const { processUserQuery } = require("~/googleBooksApi/");
 const { createBookEntry, removeBookByISBN, updateBookByISBN, findOneBookByISBN,
 		removeBook, updateBook, findOneBook
 } = require("@models/book/book.model");
@@ -24,8 +24,9 @@ router.post('/isbn/:isbn', authToken, async (req, res) => {
 	const params = req.params
 	const isbn = params.isbn.replaceAll("-", "")
 	
+	const bookAdded = await createBookEntry({isbn})
+
 	try {
-		const bookAdded = await createBookEntry({isbn})
 		if (bookAdded)
 			res.status(200).json(bookAdded);
 		else

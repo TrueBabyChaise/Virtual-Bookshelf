@@ -1,19 +1,21 @@
 
 const mongoose = require('mongoose');
-const { getBookInfo } = require('@openlibrary');
+const { getBookInfo } = require('~/googleBooksApi');
 
 const Book = new mongoose.Schema({
+    
     title: {type: String, required: true},
     isbn: {type: String, required: true, unique: true},
-    author: {type: String, default: ""},
-    contributors: {type: Map, of: String,  default: {}},
+    authors: {type: Array, default: []},
+    categories: {type: Array, default: []},
+    maturityRating: {type: String,  default: ""},
     numberOfPages: {type: Number, default: 0},
     publisher: {type: String,  default: ""},
+    publishedDate: {type: String,  default: ""},
     synopsis: {type: String,  default: ""},
     language: {type: String,  default: ""},
-    imageS: {type: String, required:true},
-    imageM: {type: String, required:true},
-    imageL: {type: String, required:true},
+    smallThumbnail: {type: String, required:true},
+    thumbnail: {type: String, required:true},
 });
 
 const BookModel = mongoose.model('book', Book);
@@ -74,9 +76,11 @@ module.exports = {
         const bookFound = await findOneBookByISBN({isbn});
         if (!bookFound) {
             let bookData = await getBookInfo(isbn)
-            const book = new BookModel(bookData);
-            book.save();
-            return book;
+            if (bookData.isbn) {
+                const book = new BookModel(bookData);
+                book.save();
+                return book;
+            }
         }
         return false;
     },
