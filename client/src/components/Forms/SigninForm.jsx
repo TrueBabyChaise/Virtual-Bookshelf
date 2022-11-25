@@ -25,6 +25,7 @@ function SigninForm () {
       await signin(email, password)
     } catch (err) {
       console.log(err)
+      alert(err)
     }
 	}
 
