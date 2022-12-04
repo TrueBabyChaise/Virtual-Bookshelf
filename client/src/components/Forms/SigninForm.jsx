@@ -1,21 +1,18 @@
-import Input from "@src/ui/Forms/Input"
+import Input from "@ui/Forms/Input"
+import DefaultButton from "@ui/Buttons/DefaultButton"
 import Router from 'next/router'
+import Link from "next/link"
 import { useAuth } from "@hooks/useAuth"
 import { useEffect } from "react"
-
-// async function loginUser(credentials) {
-//   await axios.post("auth/login", credentials).then(
-//     async (r) => {
-//       if (r.data)
-//         console.log(r.data)
-//     },
-//     (err) => { throw err.response.data}
-//   )
-// }
+import toast from "react-hot-toast"
 
 function SigninForm () {
   const {user, signin} = useAuth()
   
+  /**
+   * Submit Signin form
+   * @param {object} e 
+   */
   const handleSubmit = async e => {
     e.preventDefault();
     try {
@@ -24,8 +21,7 @@ function SigninForm () {
       const password = credentials.get('password')
       await signin(email, password)
     } catch (err) {
-      console.log(err)
-      alert(err)
+      toast.error(JSON.stringify(err.response.data))
     }
 	}
 
@@ -37,18 +33,31 @@ function SigninForm () {
 
   return (
     <div>
+
+      <h2 className="text-3xl text-slate-100 font-bold text-center mb-4">
+        Welcome back!
+      </h2>
+
       <form onSubmit={handleSubmit}>
         <Input label="Email" 
           name="email" 
           type="email" 
-          placeholder="john@doe.com" 
-          className="my-2" />
+          placeholder="john@doe.com"
+					required={true}
+          className="my-3" />
         <Input label="Password" 
           name="password" 
           type="password"
-          className="my-2" />
+					required={true}
+          className="my-3" />
 
-          <input type="submit" value="Submit" />
+        <DefaultButton className="mt-4 mx-auto" title="Submit" type="submit" />
+        <div className="mt-6">
+          <Link className="text-slate-400 text-xs text-center block hover:text-slate-100" 
+            href="/signup">
+            Don't have an account ? Sign up here.
+          </Link>
+        </div>
       </form>
     </div>
   )
