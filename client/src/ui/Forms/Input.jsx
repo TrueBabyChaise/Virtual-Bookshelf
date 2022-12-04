@@ -1,6 +1,7 @@
 import PropType from "prop-types"
+import { forwardRef } from "react"
 
-function Input ({ type, name, inputClass, className, Icon, label, onChange, value, placeholder = '' }) {
+const Input = forwardRef(({ type, name, inputClass, className, Icon, label, onChange, value, placeholder = '', required = false}, ref ) => {
   return (
     <div className={`${className}`}>
       { label && <label htmlFor={name} className="text-slate-300">{label}</label> }
@@ -12,11 +13,13 @@ function Input ({ type, name, inputClass, className, Icon, label, onChange, valu
           title={name} 
           onChange={onChange}
           value={value}
+          required={required}
+          ref={ref}
           className={`bg-transparent text-slate-100 outline-0 text-sm h-full my-auto w-full ${inputClass}`} />
       </div>
     </div>
   )
-}
+})
 
 Input.propTypes = {
   type: PropType.string.isRequired,
@@ -27,7 +30,8 @@ Input.propTypes = {
   className: PropType.string,
   Icon: PropType.elementType,
   label: PropType.string,
-  placeholder: PropType.string
+  placeholder: PropType.string,
+  required: PropType.bool
 }
 
 export default Input
