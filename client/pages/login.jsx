@@ -13,7 +13,7 @@ export default function Login() {
       </Head>
 
       <LoginContainer>
-        <div className="bg-gray-800 m-auto max-w-[400px] p-4 rounded-xl">
+        <div className="bg-gray-800 m-auto max-w-[400px] px-6 py-10 rounded-xl">
           <SigninForm />
         </div>
       </LoginContainer>
