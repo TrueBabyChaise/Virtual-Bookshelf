@@ -1,5 +1,5 @@
 import React, { useState, useContext, createContext, useEffect } from "react"
-import apiAxios from "@src/configs/api"
+import api from "@src/configs/api"
 
 const authContext = createContext()
 
@@ -17,7 +17,7 @@ function useProvideAuth() {
   const [loading, setLoading] = useState(true)
 
   /**
-   * Fonction de connexion
+   * Login function
    * @param {string} email 
    * @param {string} password 
    * @returns {Promise}
@@ -26,7 +26,8 @@ function useProvideAuth() {
     // Login user and get JWT token
     try {
       const requestData = { email: email, password: password }
-      const data = await apiAxios(`auth/login`, 'POST', requestData)
+      const { data } = await api.post('/auth/login', requestData)
+      // (`auth/login`, 'POST', requestData)
       setUser(data.user)
       setLoading(false)
     } catch (error) {
@@ -36,12 +37,30 @@ function useProvideAuth() {
   }
 
   /**
-   * Fonction de déconnexion
+   * Signup function
+   * @param {string} email 
+   * @param {string} password 
+   * @returns {Promise}
+   */
+  const signup = async (email, username, password) => {
+    try {
+      const requestData = { email: email, username: username, password: password }
+      await api.post('/auth/register', requestData)
+      setUser({username: username})
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      throw error
+    }
+  }
+
+  /**
+   * Signout function
    * @returns {null}
    */
   const signout = async () => {
     try {
-      await apiAxios(`auth/logout`, 'POST')
+      await api.post('/auth/logout')
       setUser(null)
       setLoading(false)
     } catch (error) {
@@ -51,20 +70,19 @@ function useProvideAuth() {
   }
 
   useEffect(() => {
-    const data = apiAxios(`auth/still_alive`).then(data => {
-      setUser(data)
+    api.get('/auth/still_alive').then(({data}) => {
+      setUser(data.user)
       setLoading(false)
     }, e => {
       setLoading(false)
-      console.log(e)
     })
-    console.log(data)
   }, [])
 
   return {
     user,
     loading,
     signin,
+    signup,
     signout
   }
 }
