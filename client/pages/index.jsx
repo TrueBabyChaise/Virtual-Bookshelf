@@ -32,7 +32,7 @@ export default function Home() {
           <h1 className="text-4xl text-slate-100 font-bold">My Collection</h1>
         </header>
         <BookListFilters />
-        <BookList books={books} />
+        <BookList booksInput={books} />
       </AppContainer>
     </>
   )
