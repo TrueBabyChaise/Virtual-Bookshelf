@@ -7,7 +7,7 @@ import { useEffect, createRef } from "react"
 import toast from "react-hot-toast"
 
 function SignupForm () {
-  const {user, signup} = useAuth()
+  const {user, signup, signin} = useAuth()
   const passwordInput = createRef()
   const confirmPasswordInput = createRef()
   
@@ -23,6 +23,12 @@ function SignupForm () {
       const username = credentials.get('username')
       const password = credentials.get('password')
       await signup(email, username, password)
+    } catch (err) {
+      toast.error(JSON.stringify(err.response.data))
+    }
+
+    try {
+      await signin(credentials.get('email'), credentials.get('password'))
     } catch (err) {
       toast.error(JSON.stringify(err.response.data))
     }
