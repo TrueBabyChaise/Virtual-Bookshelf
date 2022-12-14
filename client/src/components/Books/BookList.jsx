@@ -31,7 +31,7 @@ function BookList ({ booksInput }) {
     <div className="grid gap-5 justify-center grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8">
       {
         !loading ? books.map((e,i) => (
-          <BookCard cover={e.cover}
+          <BookCard cover={e.thumbnail}
             className="h-64"
             title={e.title}
             key={i}
