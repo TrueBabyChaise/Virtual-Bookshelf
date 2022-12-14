@@ -26,8 +26,23 @@ export default function useBooks() {
 		}
 	}
 
+
+	const getUserBooks = async () => {
+		setLoading(true)
+		try {
+			const { data } = await api.get('/user/book')
+			setLoading(false)
+			console.log("Test", data)
+			return data
+		} catch (error) {
+			setLoading(false)
+			throw error
+		}
+	}
+
 	return {
 		loading,
-		searchBook
+		searchBook,
+		getUserBooks
 	}
 }

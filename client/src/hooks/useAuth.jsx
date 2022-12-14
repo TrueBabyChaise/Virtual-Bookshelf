@@ -46,7 +46,6 @@ function useProvideAuth() {
     try {
       const requestData = { email: email, username: username, password: password }
       await api.post('/auth/register', requestData)
-      setUser({username: username})
       setLoading(false)
     } catch (error) {
       setLoading(false)
