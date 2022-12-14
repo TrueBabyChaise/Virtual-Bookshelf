@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import LoginContainer from '@components/LoginContainer'
-import SigninForm from '@src/components/Forms/SigninForm'
+import SignupForm from '@src/components/Forms/SignupForm'
 
-export default function Login() {
+export default function Signup() {
 
   return (
     <>
@@ -14,7 +14,7 @@ export default function Login() {
 
       <LoginContainer>
         <div className="bg-gray-800 m-auto max-w-[400px] px-6 py-10 rounded-xl">
-          <SigninForm />
+          <SignupForm />
         </div>
       </LoginContainer>
     </>

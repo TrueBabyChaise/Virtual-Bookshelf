@@ -42,8 +42,8 @@ async function removeBookByISBN({isbn}) {
     return bookDeleted;
 }
 
-async function findOneBook({id}) {
-    const bookFound = await BookModel.find({ id })
+async function findOneBook({ _id }) {
+    const bookFound = await BookModel.find({ _id })
     if (bookFound.length)
         return bookFound[0];
     return undefined;
