@@ -30,7 +30,7 @@ jobs:
         run: docker pull ghcr.io/truebabychaise/virtual-bookshelf-client:latest || exit 0
       -
         name: Build Docker image client
-        run: docker build -f ./api/Dockerfile ./api --cache-from ghcr.io/truebabychaise/virtual-bookshelf-client:latest --tag ghcr.io/truebabychaise/virtual-bookshelf-client:latest
+        run: docker build -f ./client/Dockerfile ./client --cache-from ghcr.io/truebabychaise/virtual-bookshelf-client:latest --tag ghcr.io/truebabychaise/virtual-bookshelf-client:latest
       -
         name: Push the client image to GitHub Container Registry
         run: docker push ghcr.io/truebabychaise/virtual-bookshelf-client:latest
