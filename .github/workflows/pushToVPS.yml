@@ -42,7 +42,7 @@ jobs:
           username: ${{ secrets.VPS_USER }} 
           password: ${{ secrets.VPS_PASS }}
           script: |
-            echo $CR_PAT | docker login ghcr.io -u TrueBabyChaise --password-stdin
+            echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u TrueBabyChaise --password-stdin
             docker-compose down
             docker image rm ghcr.io/truebabychaise/virtual-bookshelf-back:latest
             docker image rm ghcr.io/truebabychaise/virtual-bookshelf-client:latest
