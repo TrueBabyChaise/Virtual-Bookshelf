@@ -12,7 +12,7 @@ const routes = require('./routes');
 const app = express();
 
 app.use(
-        cors({origin: 'http:localhost:3000', credentials: true, origin: true})
+        cors({origin: 'http:164.92.237.184:3000', credentials: true, origin: true})
 );
 
 /*app.use(
