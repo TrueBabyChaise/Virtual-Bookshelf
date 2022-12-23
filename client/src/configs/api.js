@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const instance = axios.create({
-  baseURL: process.env.BASE_API_URL ? process.env.BASE_API_URL : 'http://164.92.237.184:3001/api',
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true
 });
 
