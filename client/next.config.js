@@ -2,7 +2,7 @@
 
 module.exports = {
   reactStrictMode: true,
-  images: { domains: ['books.google.com', 'm.media-amazon.com', ''] },
+  images: { domains: ['books.google.com', 'm.media-amazon.com', 'pictures.abebooks.com'] },
   async rewrites() {
     return {
       beforeFiles: [

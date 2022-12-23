@@ -16,7 +16,8 @@ router.get('/', authToken, async (req, res) => {
 		const booksInfo = await findAllBookUserInfoOfUser({ fkUser: userId })
 		const books = []
 		for (let i = 0; i < booksInfo.length; i++) {
-			const book = await findOneBook(booksInfo[i].fkBook)
+			const book = await findOneBook({_id: booksInfo[i].fkBook})
+			console.log(book.title, booksInfo[i].fkBook, i)
 			books.push(book)
 		}
 		res.status(200).json(books);
@@ -40,9 +41,10 @@ router.get('/:bookID', authToken, async (req, res) => {
 	}
 
 
-	if (bookUserInfo)
-		res.status(200).json(bookUserInfo);
-	else
+	if (bookUserInfo) { 
+		const book = await findOneBook({_id: bookUserInfo.fkBook})
+		res.status(200).json(book);
+	} else
 		res.status(422).json({message: "Couldn't find book"});
 });
 
@@ -54,7 +56,7 @@ router.get('/isbn/:isbn', authToken, async (req, res) => {
 	const bookUserInfo = await findOneBookUserInfoByISBN({isbn, fkUser: userId});
 
 	if (bookUserInfo) {
-		const book = await findOneBook(bookUserInfo.fkBook)
+		const book = await findOneBook({_id: bookUserInfo.fkBook})
 		res.status(200).json(book);
 	} else
 		res.status(422).json({message: "Couldn't find book"});
@@ -65,12 +67,14 @@ router.post('/isbn/:isbn', authToken, async (req, res) => {
 	const isbn = params.isbn.replaceAll("-", "")
 	const userId = req.user
 
+	console.log(isbn, userId)
+
 	if (!userId)
 		res.status(403).json({message: "Forbidden"})
 	else {
 		try {
 			bookAdded = await createBookUserInfoEntry({isbn, fkUser: userId})
-			const book = await findOneBook(bookAdded.fkBook)
+			const book = await findOneBook({id: bookAdded.fkBook})
 			if (bookAdded)
 				res.status(200).json({book});
 			else
