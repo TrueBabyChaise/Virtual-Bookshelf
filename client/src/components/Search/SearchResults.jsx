@@ -10,7 +10,7 @@ export default function SearchResults ({ loading, resultsData }) {
         { resultsData.books 
           && resultsData.books.length > 0 
           && resultsData.books.map(
-            b => <SearchResultsRow {...b} />
+            b => <SearchResultsRow key={b.title} {...b} />
           ) }
       </div>
     </div>

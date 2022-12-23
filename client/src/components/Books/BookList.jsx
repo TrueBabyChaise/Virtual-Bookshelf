@@ -12,18 +12,18 @@ function BookList ({ booksInput }) {
     console.log('Card clicked')
   }
 
-  const getBooks = async () => {
-    try {
-      const books = await getUserBooks()
-      setBooks(books)
-      console.log(books)
-    } catch (err) {
-      toast.error(JSON.stringify(err))
-    }
-  }
-
   useEffect(() => {
-    getBooks()
+    /*if (booksInput.length > 0) {
+      setBooks(booksInput)
+    } else {*/
+      getUserBooks()
+        .then(data => {
+          setBooks(data.books)
+        })
+        .catch(err => {
+          toast.error(err.message)
+        })
+    //}
   }, [])
 
   return (
