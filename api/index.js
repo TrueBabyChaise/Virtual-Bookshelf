@@ -11,8 +11,10 @@ const strategy = require('./passport/auth');
 const routes = require('./routes');
 const app = express();
 
+console.log(process.env.HOST_CLIENT)
+
 app.use(
-        cors({origin: 'http:localhost:3000', credentials: true, origin: true})
+        cors({origin: process.env.HOST_CLIENT, credentials: true})
 );
 
 /*app.use(

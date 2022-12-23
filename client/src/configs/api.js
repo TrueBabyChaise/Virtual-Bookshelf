@@ -2,8 +2,10 @@ import axios from "axios"
 
 export default async function apiAxios(url, method = 'GET', data) {
 
+	console.log(process.env.NEXT_PUBLIC_API_URL)
+
 	const config = {
-		url: `http://localhost:3001/api/${url}`,
+		url: `${process.env.NEXT_PUBLIC_API_URL}/${url}`,
 		method: method,
 		headers: {
 			'Content-Type': 'application/json'
