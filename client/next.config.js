@@ -6,8 +6,8 @@ module.exports = {
   async rewrites() {
     return {
       beforeFiles: [
-        { source: '/api/', destination: `${process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL: 'https://api.satellite-bookshelf.com'}/api` },
-        { source: '/api/:path*', destination: `${process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL: 'https://api.satellite-bookshelf.com'}/:path*` },
+        { source: '/api/', destination: 'https://api.satellite-bookshelf.com/api' },
+        { source: '/api/:path*', destination: 'https://api.satellite-bookshelf.com/:path*' },
       ],
     };
   },
