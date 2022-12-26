@@ -55,7 +55,7 @@ function SigninForm () {
         <div className="mt-6">
           <Link className="text-slate-400 text-xs text-center block hover:text-slate-100" 
             href="/signup">
-            Don't have an account ? Sign up here.
+            Don&apos;t have an account ? Sign up here.
           </Link>
         </div>
       </form>

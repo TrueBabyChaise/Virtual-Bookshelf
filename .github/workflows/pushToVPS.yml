@@ -1,0 +1,52 @@
+name: Build and publish
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Login to GitHub Container Registry
+        run: echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u TrueBabyChaise --password-stdin
+      -
+        name: Pull image  back to use as a cache
+        run: docker pull ghcr.io/truebabychaise/virtual-bookshelf-back:latest || exit 0
+      -
+        name: Build Docker image back
+        run: docker build -f ./api/Dockerfile ./api --cache-from ghcr.io/truebabychaise/virtual-bookshelf-back:latest --tag ghcr.io/truebabychaise/virtual-bookshelf-back:latest
+      -
+        name: Push the back image to GitHub Container Registry
+        run: docker push ghcr.io/truebabychaise/virtual-bookshelf-back:latest
+      -
+        name: Pull image client to use as a cache
+        run: docker pull ghcr.io/truebabychaise/virtual-bookshelf-client:latest || exit 0
+      -
+        name: Build Docker image client
+        run: docker build -f ./client/Dockerfile ./client --cache-from ghcr.io/truebabychaise/virtual-bookshelf-client:latest --tag ghcr.io/truebabychaise/virtual-bookshelf-client:latest
+      -
+        name: Push the client image to GitHub Container Registry
+        run: docker push ghcr.io/truebabychaise/virtual-bookshelf-client:latest
+      -
+        name: VPS - pull image and run app containters
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USER }} 
+          password: ${{ secrets.VPS_PASS }}
+          script: |
+            echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u TrueBabyChaise --password-stdin
+            docker-compose down
+            docker image rm ghcr.io/truebabychaise/virtual-bookshelf-back:latest
+            docker image rm ghcr.io/truebabychaise/virtual-bookshelf-client:latest
+            docker pull ghcr.io/truebabychaise/virtual-bookshelf-back:latest
+            docker pull ghcr.io/truebabychaise/virtual-bookshelf-client:latest
+            docker volume prune -f
+            docker-compose up -d --no-deps
