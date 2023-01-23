@@ -23,12 +23,11 @@ function SignupForm () {
       const username = credentials.get('username')
       const password = credentials.get('password')
       await signup(email, username, password)
-    } catch (err) {
-      toast.error(JSON.stringify(err.response.data))
-    }
-
-    try {
-      await signin(credentials.get('email'), credentials.get('password'))
+      try {
+        await signin(credentials.get('email'), credentials.get('password'))
+      } catch (err) {
+        toast.error(JSON.stringify(err.response.data))
+      }
     } catch (err) {
       toast.error(JSON.stringify(err.response.data))
     }
