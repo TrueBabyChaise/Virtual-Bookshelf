@@ -26,6 +26,7 @@ services:
       MONGO_PASSWORD: ${MONGO_PASSWORD}
       MONGO_DB: ${MONGO_DB}
       PORT: ${PORT}
+      HOST_CLIENT: ${HOST_CLIENT}
     volumes:
       - ./api/routes:/api/routes
       - ./api/models:/api/models
