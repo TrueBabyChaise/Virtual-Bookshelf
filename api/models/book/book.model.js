@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const { getBookInfo } = require('~/googleBooksApi');
 
 const Book = new mongoose.Schema({
-    
     title: {type: String, required: true},
     isbn: {type: String, required: true, unique: true},
     authors: {type: Array, default: []},
@@ -76,6 +75,8 @@ module.exports = {
         const bookFound = await findOneBookByISBN({isbn});
         if (!bookFound) {
             let bookData = await getBookInfo(isbn)
+            if (!bookData)
+                return false;
             if (bookData.isbn) {
                 const book = new BookModel(bookData);
                 book.save();

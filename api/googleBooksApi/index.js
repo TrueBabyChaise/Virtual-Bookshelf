@@ -1,5 +1,26 @@
 const axios = require('axios');
 
+
+async function requestBookByISBNMaj(isbn) {
+    return new Promise(function (resolve, reject) {
+        var config = {
+            method: 'get',
+            url: `https://www.googleapis.com/books/v1/volumes?q=ISBN:${isbn}&projection=full`,
+            headers: {}
+        };
+
+        axios(config)
+            .then(function (response) {
+                if (response.data.totalItems == 0)
+                    resolve(null);
+                resolve(response.data.items[0]);
+            })
+            .catch(function (error) {
+                reject(error);
+            });
+    })
+}
+
 /**
     * 
     * @param {String} ISBN 
@@ -14,6 +35,8 @@ async function requestBookByISBN(isbn) {
 
         axios(config)
             .then(function (response) {
+                if (response.data.totalItems == 0)
+                    resolve(null);
                 resolve(response.data.items[0]);
             })
             .catch(function (error) {
@@ -110,7 +133,11 @@ function foundISBN10(isbns) {
     * @param {String} ISBN
     */
 async function getBookInfo(ISBN) {
-    const ISBNItemInfo = await requestBookByISBN(ISBN)
+    let ISBNItemInfo = await requestBookByISBN(ISBN)
+    if (ISBNItemInfo == null)
+        ISBNItemInfo = await requestBookByISBNMaj(ISBN)
+    if (ISBNItemInfo == null)
+        return null;
     const volumeInfo = ISBNItemInfo.volumeInfo
     let bookCover = ""
     // GOOGLE IMAGE SEARCH "https://www.google.com/search?q=${ISBN}&source=lnms&tbm=isch&sa=X&ved=2ahUKEwie44_AnqLpAhUhBWMBHUFGD90Q_AUoAXoECBUQAw&biw=1920&bih=947"
@@ -133,6 +160,8 @@ async function getBookInfo(ISBN) {
         }
     }
 
+    if (volumeInfo.imageLinks == undefined)
+        volumeInfo.imageLinks = { smallThumbnail: bookCover, thumbnail: bookCover }
     return {
         title: volumeInfo.title,
         isbn: ISBN,
@@ -144,7 +173,7 @@ async function getBookInfo(ISBN) {
         publishedDate: volumeInfo.publishedDate ? volumeInfo.publishedDate : "",
         synopsis: volumeInfo.description ? volumeInfo.description : "",
         language: volumeInfo.language ? volumeInfo.language : "",
-        smallThumbnail: volumeInfo.imageLinks.smallThumbnail,
+        smallThumbnail: volumeInfo.imageLinks.smallThumbnail ? volumeInfo.imageLinks.smallThumbnail : "",
         thumbnail: bookCover,
     }
 }

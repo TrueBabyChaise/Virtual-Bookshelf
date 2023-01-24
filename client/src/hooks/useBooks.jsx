@@ -32,7 +32,18 @@ export default function useBooks() {
 		try {
 			const { data } = await api.get('/user/book')
 			setLoading(false)
-			console.log("Test", data)
+			return data
+		} catch (error) {
+			setLoading(false)
+			throw error
+		}
+	}
+
+	const addBookISBN = async (book) => {
+		setLoading(true)
+		try {
+			const { data } = await api.post(`/user/book/isbn/${book.isbn}`, book)
+			setLoading(false)
 			return data
 		} catch (error) {
 			setLoading(false)
@@ -43,6 +54,7 @@ export default function useBooks() {
 	return {
 		loading,
 		searchBook,
-		getUserBooks
+		getUserBooks,
+		addBookISBN
 	}
 }

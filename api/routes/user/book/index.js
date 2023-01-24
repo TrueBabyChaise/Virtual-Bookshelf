@@ -17,8 +17,11 @@ router.get('/', authToken, async (req, res) => {
 		const books = []
 		for (let i = 0; i < booksInfo.length; i++) {
 			const book = await findOneBook({_id: booksInfo[i].fkBook})
-			console.log(book.title, booksInfo[i].fkBook, i)
-			books.push(book)
+			if (book) {
+				books.push(book)
+			} else {
+				booksInfo[i].delete()
+			}
 		}
 		res.status(200).json(books);
 	}
@@ -74,12 +77,13 @@ router.post('/isbn/:isbn', authToken, async (req, res) => {
 	else {
 		try {
 			bookAdded = await createBookUserInfoEntry({isbn, fkUser: userId})
-			const book = await findOneBook({id: bookAdded.fkBook})
+			const book = await findOneBook({_id: bookAdded.fkBook})
 			if (bookAdded)
-				res.status(200).json({book});
+				res.status(200).json({message: "Book Added", data: book});
 			else
 				res.status(422).json({message: "Book already added"})
 		} catch (error) {
+			console.log(error)
 			res.status(422).json({message: "Someting wrong happened"});
 		}
 	}

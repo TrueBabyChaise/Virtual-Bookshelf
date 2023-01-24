@@ -2,10 +2,12 @@ import { useEffect } from "react"
 import Image from "next/image"
 import { MdOutlineNoPhotography } from "react-icons/md" 
 
-export default function SearchResultsRow ({ title, image, isbn }) {
+export default function SearchResultsRow ({ title, image, isbn, handleClick }) {
 
   return (
-    <div className="flex px-4 py-3 hover:bg-gray-800 cursor-pointer ">
+    <div className="flex px-4 py-3 hover:bg-gray-800 cursor-pointer "
+        onClick={handleClick}
+        isbn={isbn}>
       <div className="h-12 w-8 relative overflow-hidden rounded">
         { image ? (
           <Image src={image} 
