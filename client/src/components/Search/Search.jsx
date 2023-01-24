@@ -1,13 +1,14 @@
 import SearchBar from "@components/Search/SearchBar"
 import SearchResults from "@components/Search/SearchResults"
 import { createRef, useState } from "react"
-import useBooks from "@src/hooks/useBooks"
+import { useBooks, useBooksSearch } from "@src/hooks/useBooks"
 import toast from "react-hot-toast"
 
 export default function Search ({ toggleSearch }) {
   
   const [resultsData, setResultsData] = useState({})
-  const { searchBook, addBookISBN, loading } = useBooks()
+  const { addBookISBN, loading } = useBooks()
+  const { searchBook } = useBooksSearch()
   const backdrop = createRef()
 
   /**
