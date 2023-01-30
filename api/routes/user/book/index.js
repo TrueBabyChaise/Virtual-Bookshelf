@@ -78,10 +78,9 @@ router.post('/isbn/:isbn', authToken, async (req, res) => {
 		try {
 			bookAdded = await createBookUserInfoEntry({isbn, fkUser: userId})
 			if (bookAdded) {
-				findOneBook({_id: bookAdded.fkBook}).then(book => {
-					if (!book)
+				const book = await findOneBook({_id: bookAdded.fkBook})
+				if (book)
 					res.status(200).json({message: "Book Added", data: book});
-				})
 			} else
 				res.status(422).json({message: "Book already added"})
 		} catch (error) {

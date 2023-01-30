@@ -79,7 +79,7 @@ module.exports = {
                 return false;
             if (bookData.isbn) {
                 const book = new BookModel(bookData);
-                book.save();
+                await book.save();
                 return book;
             }
         }
