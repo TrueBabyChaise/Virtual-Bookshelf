@@ -1,10 +1,11 @@
 import PropType from "prop-types"
 import BookCard from "@src/ui/Cards/BookCard"
 import { MdOutlineLibraryAdd } from "react-icons/md"
+import Router from 'next/router'
 
 function BookList ({ booksInput, loading }) {
-  const handleClick = e => {
-    console.log('Card clicked')
+  const handleCardClick = book => {
+    Router.push(`/book/${book.isbn}`)
   }
 
   console.log(booksInput)
@@ -19,7 +20,7 @@ function BookList ({ booksInput, loading }) {
               className="h-64"
               title={e.title}
               key={i}
-              clickAction={handleClick} /> 
+              clickAction={() => handleCardClick(e)} /> 
           </div>
         )) : !loading ? 
         <BookListInfo>You don't have a book yet... Try adding one by clicking on <MdOutlineLibraryAdd className="inline-block" />.</BookListInfo> : 

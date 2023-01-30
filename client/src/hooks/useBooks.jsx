@@ -12,7 +12,7 @@ export const useBooks = () => {
   return useContext(booksContext)
 }
 
-export function useBooksSearch() {
+export function useBooksSearchApi() {
 	const [loading, setLoading] = useState(false)
 	const abortControllerRef = useRef()
 
@@ -32,9 +32,22 @@ export function useBooksSearch() {
 		}
 	}
 
+	const getBookByISBN = async (isbn) => {
+		setLoading(true)
+		try {
+			const { data } = await api.get(`/book/isbn/${isbn}`)
+			setLoading(false)
+			return data
+		} catch (error) {
+			setLoading(false)
+			throw error
+		}
+	}
+
 	return {
 		loading,
-		searchBook
+		searchBook,
+		getBookByISBN
 	}
 }
 

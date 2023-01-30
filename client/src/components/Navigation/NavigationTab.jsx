@@ -13,7 +13,7 @@ function NavigationTab ({title, Icon, className = '', selected = false, onClick 
 }
 
 NavigationTab.propTypes = {
-  title: PropType.string.isRequired,
+  title: PropType.string,
   Icon: PropType.elementType.isRequired,
   className: PropType.string,
   selected: PropType.bool,
