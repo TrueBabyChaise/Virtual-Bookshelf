@@ -4,7 +4,9 @@ RUN mkdir /client
 COPY . /client
 WORKDIR /client
 
-RUN if [ ! test -d "node_modules" ]; then RUN npm install
+RUN npm install
+
+#RUN if [ ! test -d "node_modules" ]; then; RUN npm install; fi
 
 EXPOSE 3000
 
