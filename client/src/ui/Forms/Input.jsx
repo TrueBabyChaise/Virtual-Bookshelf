@@ -4,7 +4,7 @@ import { forwardRef } from "react"
 const Input = forwardRef(({ type, name, inputClass, className, Icon, label, onChange, value, placeholder = '', required = false}, ref ) => {
   return (
     <div className={`${className}`}>
-      { label && <label htmlFor={name} className="text-slate-300">{label}</label> }
+      { label && <label htmlFor={name} className="text-slate-300 text-sm block mb-1">{label}</label> }
       <div className={`bg-gray-700 rounded flex px-2 py-1 h-9 focus-within:outline focus-within:outline-gray-800`}>
         {Icon && <Icon className="ml-1 mr-2 my-auto text-slate-100 w-6 h-6" />}
         <input type={type}

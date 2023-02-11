@@ -12,6 +12,10 @@ export const useBooks = () => {
   return useContext(booksContext)
 }
 
+/**
+ * Hook that provides books search api
+ * @returns {Object} {loading, searchBook, getBookByISBN}
+ */
 export function useBooksSearchApi() {
 	const [loading, setLoading] = useState(false)
 	const abortControllerRef = useRef()
@@ -51,11 +55,13 @@ export function useBooksSearchApi() {
 	}
 }
 
-
+/**
+ * Hook that provides books state and actions
+ * @returns {Object} {loading, books, getUserBooks, addBookISBN}
+ */
 function useProvideBooks() {
 	const [loading, setLoading] = useState(false)
 	const [books, setBooks] = useState([])
-	const abortControllerRef = useRef()
 	
 	const getUserBooks = async () => {
 		setLoading(true)

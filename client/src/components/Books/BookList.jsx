@@ -1,11 +1,17 @@
 import PropType from "prop-types"
+import { useState } from "react"
 import BookCard from "@src/ui/Cards/BookCard"
+import BookModal from "@src/ui/Modals/BookModal"
 import { MdOutlineLibraryAdd } from "react-icons/md"
 import Router from 'next/router'
 
 function BookList ({ booksInput, loading }) {
+  let [isModalOpen, setIsModalOpen] = useState(false)
+
   const handleCardClick = book => {
-    Router.push(`/book/${book.isbn}`)
+    // Router.push(`/book/${book.isbn}`)
+    
+    setIsModalOpen(true)
   }
 
   console.log(booksInput)
@@ -13,6 +19,10 @@ function BookList ({ booksInput, loading }) {
   return (
     // <div className="grid grid-rows-[repeat(auto-fill,18rem)] grid-cols-[repeat(auto-fill,13rem)] gap-5 justify-center">
     <>
+      <BookModal 
+        isModalOpen={isModalOpen} 
+        setIsModalOpen={setIsModalOpen} 
+      />
       {
         !loading && booksInput.length > 0 ? <div  className="grid gap-5 justify-center grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8"> {
           booksInput.map((e,i) => (

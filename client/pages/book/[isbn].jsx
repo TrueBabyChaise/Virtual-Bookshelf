@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import api from "@src/configs/api"
 import AppContainer from '@components/AppContainer'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -49,16 +48,4 @@ const Book = ({ data }) => {
   )
 }
 
-export async function getServerSideProps () {
-  // Fetch data from API
-  
-  const { isbn } = router.query
-  const { data } = await api.get(`/book/isbn/${isbn}`)
-
-  return {
-    props: {
-      data
-    }
-  }
-}
 export default Book
