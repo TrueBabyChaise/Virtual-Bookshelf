@@ -56,8 +56,8 @@ function BookModal ({ isModalOpen, setIsModalOpen, book, className = '' }) {
                     <div className="rounded-sm -mb-7 w-[20%] h-60 overflow-hidden relative">
                       <Image src={book.thumbnail} fill={true} alt={book.title} sizes="100%" className="h-60 object-scale-down rounded-xl" />
                     </div>
-                    <Dialog.Title as="h3" className="text-2xl font-bold text-slate-100 mt-auto p-5">
-                      {book.Title}
+                    <Dialog.Title as="h3" className="text-2xl font-bold text-slate-100 mt-auto w-[80%] p-5">
+                      {book.title}
                     </Dialog.Title>
                   </div>
                 </div>
