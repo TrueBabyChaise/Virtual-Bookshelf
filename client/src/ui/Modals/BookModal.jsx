@@ -2,10 +2,11 @@ import PropType from "prop-types"
 import Image from "next/image"
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
-import Input from "../Forms/Input"
+import Input  from "../Forms/Input"
+import PageSelector from "../Forms/PageSelector"
 import { MdClose } from "react-icons/md"
 
-function BookModal ({ isModalOpen, setIsModalOpen, className = '' }) {
+function BookModal ({ isModalOpen, setIsModalOpen, book, className = '' }) {
 
   const closeModal = () => {
     setIsModalOpen(false)
@@ -52,11 +53,11 @@ function BookModal ({ isModalOpen, setIsModalOpen, className = '' }) {
                     </div>
 
                     {/* Cover */}
-                    <div className="rounded-sm -mb-7 w-24 h-32 overflow-hidden relative">
-                      <Image src="/ngnl-covers/ngnl_tome_1.jpg" fill={true} className="w-24 h-32 object-cover" />
+                    <div className="rounded-sm -mb-7 w-[20%] h-60 overflow-hidden relative">
+                      <Image src={book.thumbnail} fill={true} alt={book.title} sizes="100%" className="h-60 object-scale-down rounded-xl" />
                     </div>
                     <Dialog.Title as="h3" className="text-2xl font-bold text-slate-100 mt-auto p-5">
-                      No Game No Life
+                      {book.Title}
                     </Dialog.Title>
                   </div>
                 </div>
@@ -65,21 +66,21 @@ function BookModal ({ isModalOpen, setIsModalOpen, className = '' }) {
                 <div className="p-12 pt-16">
                   <div className="mb-4">
                     <Dialog.Description as="p" className="text-slate-300 text-sm">
-                      Social-phobic Sora and shut-in Shiro form a genius gamer sibling duo. The two find the world to be a lousy game…until someone claiming to be God transports them to a world where everything is decided by games!
-                      <br /> <br />
-                      Will these two failures at life become the saviors of a strange, new world?
+                      {book.synopsis}
                     </Dialog.Description>
                   </div>
 
                   {/* Status, nbr de page lue, rating, personnal comment, étagère de rangement */}
                   <div className="grid grid-cols-3 gap-5 gap-x-10 mt-10">
-                    <Input label="Status" />
-                    <Input label="Page progress" />
-                    <Input label="Rating" />
-                    <Input label="Shelf" />
+                    <Input type="text" label="Status" name="Status" />
+                    <div className="w-[120px]">
+                      <PageSelector type="number" name="Page" label="Page progress" pageMax={book.numberOfPages}/>
+                    </div>
+                    <Input type="text" label="Rating" name="Rating" />
+                    <Input type="text" label="Shelf" name="Shelf" />
                   </div>
                   <div className="mt-5">
-                    <Input label="Comment" />
+                    <Input type="text" label="Comment" name="Comment" />
                   </div>
                 </div>
 
@@ -112,6 +113,7 @@ function BookModal ({ isModalOpen, setIsModalOpen, className = '' }) {
 BookModal.propTypes = {
   isModalOpen: PropType.bool.isRequired,
   setIsModalOpen: PropType.func.isRequired,
+  book: PropType.object.isRequired,
   className: PropType.string
 }
 

@@ -117,7 +117,7 @@ function foundISBN13(isbns) {
         if (isbns[i].type == "ISBN_13")
             return isbns[i].identifier
     }
-    return isbns[isbns.length - 1].identifier;
+    return null;
 }
 
 function foundISBN10(isbns) {
@@ -215,6 +215,7 @@ async function processUserQuery(query, limit=30) {
         const book = element.volumeInfo
         if (book.industryIdentifiers) {
             const isbn = foundISBN13(book.industryIdentifiers)
+            if (!isbn) continue;
             let image = "";
             if (book.imageLinks)
                 image = book.imageLinks.smallThumbnail;

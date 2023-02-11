@@ -7,21 +7,21 @@ import Router from 'next/router'
 
 function BookList ({ booksInput, loading }) {
   let [isModalOpen, setIsModalOpen] = useState(false)
+  let [book, setBook] = useState({})
 
   const handleCardClick = book => {
     // Router.push(`/book/${book.isbn}`)
-    
+    setBook(book)
     setIsModalOpen(true)
   }
-
-  console.log(booksInput)
 
   return (
     // <div className="grid grid-rows-[repeat(auto-fill,18rem)] grid-cols-[repeat(auto-fill,13rem)] gap-5 justify-center">
     <>
       <BookModal 
         isModalOpen={isModalOpen} 
-        setIsModalOpen={setIsModalOpen} 
+        setIsModalOpen={setIsModalOpen}
+        book={book}
       />
       {
         !loading && booksInput.length > 0 ? <div  className="grid gap-5 justify-center grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8"> {

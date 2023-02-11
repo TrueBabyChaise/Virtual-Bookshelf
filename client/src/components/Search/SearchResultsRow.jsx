@@ -11,7 +11,8 @@ export default function SearchResultsRow ({ title, image, isbn, handleClick }) {
       <div className="h-12 w-8 relative overflow-hidden rounded">
         { image ? (
           <Image src={image} 
-          fill={true} 
+          fill={true}
+          sizes="100%"
           className="object-cover" 
           alt={`Cover of ${title}`} />
         ) : (
