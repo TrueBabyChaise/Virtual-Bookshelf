@@ -74,7 +74,7 @@ function BookModal ({ isModalOpen, setIsModalOpen, book, className = '' }) {
                   <div className="grid grid-cols-3 gap-5 gap-x-10 mt-10">
                     <Input type="text" label="Status" name="Status" />
                     <div className="w-[120px]">
-                      <PageSelector type="number" name="Page" label="Page progress" pageMax={book.numberOfPages}/>
+                      <PageSelector type="text" name="Page" label="Progress" pageMax={book.numberOfPages}/>
                     </div>
                     <Input type="text" label="Rating" name="Rating" />
                     <Input type="text" label="Shelf" name="Shelf" />

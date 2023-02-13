@@ -1,32 +1,50 @@
 import PropType from "prop-types"
 import { forwardRef } from "react"
 
-const Input = forwardRef(({ type, name, inputClass, className, Icon, label, onChange, value, pageMax, placeholder = '', required = false}, ref ) => {
+const PageSelector = forwardRef(({ type, name, inputClass, className, Icon, label, onChange, value, pageMax, placeholder = '', required = false}, ref ) => {
+  
+  const onChangeHandler = (e) => {
+    let { value } = e.target;
+    value = parseInt(value);
+    if (isNaN(value)) {
+      e.target.value = 0;
+      return;
+    }
+    value = Math.trunc(value);
+    e.target.value = value;
+    if (value < 0) {
+      e.target.value = 0;
+    }
+    if (value > pageMax) {
+      e.target.value = pageMax;
+    }
+  }
+  
+  
   return (
     <div className={`${className}`}>
       { label && <label htmlFor={name} className="text-slate-300 text-sm block mb-1">{label}</label> }
-      <div className={`bg-gray-700 rounded flex px-2 py-1 h-9 focus-within:outline focus-within:outline-gray-800`}>
+      <div className={`rounded flex px-2 py-1 h-9`}>
         {Icon && <Icon className="ml-1 mr-2 my-auto text-slate-100" />}
         <input type={type}
-          max={pageMax}
-          min={0}
           name={name}
           placeholder={placeholder}
           title={name} 
-          onChange={onChange}
+          onChange={onChange ? onChange : onChangeHandler}
           value={value}
           required={required}
           ref={ref}
-          className={`bg-transparent text-slate-100 outline-0 text-sm h-full my-auto w-2/3 ${inputClass}`} />
-        <span className="text-slate-100 text-sm my-auto ml-2 w-1/3">{pageMax ? " / " + pageMax : "/ ?"}</span>
+          className={` focus:outline focus:outline-gray-600 bg-gray-700 text-slate-100 outline-2 text-sm h-full text-center my-auto w-[50%] rounded-sm ${inputClass}`} />
+          <a className="flex items-center justify-around text-slate-100 w-[10%]">/</a>
+        <a className="flex items-center justify-around bg-red-500 text-slate-100 text-sm h-full text-center w-[40%] rounded-sm">{pageMax ? pageMax : "/ ?"}</a>
       </div>  
     </div>
   )
 })
 
-Input.displayName = "Input";
+PageSelector.displayName = "PageSelector";
 
-Input.propTypes = {
+PageSelector.propTypes = {
   type: PropType.string.isRequired,
   name: PropType.string.isRequired,
   pageMax: PropType.number,
@@ -40,4 +58,4 @@ Input.propTypes = {
   required: PropType.bool
 }
 
-export default Input
+export default PageSelector
