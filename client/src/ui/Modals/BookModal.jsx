@@ -1,14 +1,49 @@
 import PropType from "prop-types"
 import Image from "next/image"
 import { Dialog, Transition } from '@headlessui/react'
-import { Fragment } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import Input  from "../Forms/Input"
 import PageSelector from "../Forms/PageSelector"
+import Rating from "../Forms/Rating"
+import Select from "../Forms/Select"
 import { MdClose } from "react-icons/md"
+import { useBooks } from "@src/hooks/useBooks"
 
 function BookModal ({ isModalOpen, setIsModalOpen, book, className = '' }) {
 
+  const [page, setPage] = useState(book.page ? book.page : 0)
+  const [rating, setRating] = useState(book.rating ? book.rating : 0)
+  const [status, setStatus] = useState(book.status ? book.status : 0)
+  const [comment, setComment] = useState(book.comment ? book.comment : '')
+  const [shelf, setShelf] = useState(book.shelf ? book.shelf : '')
+
+  const { updateBookInfo, removeBook } = useBooks()
+
+  useEffect(() => {
+    setPage(book.page ? book.page : 0)
+    setRating(book.rating ? book.rating : 0)
+    setStatus(book.status ? book.status : 0)
+    setComment(book.comment ? book.comment : '')
+    setShelf(book.shelf ? book.shelf : '')
+  }, [book])
+
+  const deleteBook = () => {
+    removeBook(book)
+    setIsModalOpen(false) 
+  }
+
   const closeModal = () => {
+    let params = {}
+    params.page = page
+    params.rating = rating
+    params.status = status
+    params.comment = comment
+    if (shelf !== '')
+      params.shelf = shelf
+
+    book.params = params
+
+    updateBookInfo(book)
     setIsModalOpen(false)
   }
 
@@ -70,17 +105,30 @@ function BookModal ({ isModalOpen, setIsModalOpen, book, className = '' }) {
                     </Dialog.Description>
                   </div>
                   <div className="w-full">
-                      <PageSelector name="Page" label="Reading progress" pageMax={book.numberOfPages}/>
+                      <PageSelector name="Page" label="Reading progress" pageMax={book.numberOfPages} setPage={setPage} page={page}/>
                     </div>
                   {/* Status, nbr de page lue, rating, personnal comment, étagère de rangement */}
                   <div className="grid grid-cols-3 gap-5 gap-x-10 mt-10">
-                    <Input type="text" label="Status" name="Status" />
+                    <Select value={status} label="Status" name="Status" onChange={(e) => {
+                      setStatus(e.target.value)}}
+                      options={[
+                        { value: 0, label: 'Reading' },
+                        { value: 1, label: 'To read' },
+                        { value: 2, label: 'Read' },
+                        { value: 3, label: 'Abandoned'},
+                        { value: 4, label: 'On hold'},
+                      ]}
+                    />
                     
-                    <Input type="text" label="Rating" name="Rating" />
-                    <Input type="text" label="Shelf" name="Shelf" />
+                    <Rating value={rating} label="Rating" name="Rating" setValue={setRating} />
+                    <Input type="text" value={shelf} label="Shelf" name="Shelf" onChange={(e) => {
+                      setShelf(e.target.value)
+                    }} />
                   </div>
                   <div className="mt-5">
-                    <Input type="text" label="Comment" name="Comment" />
+                    <Input type="text" value={comment} label="Comment" name="Comment" onChange={(e) => {
+                      setComment(e.target.value)
+                    }}/>
                   </div>
                 </div>
 
@@ -90,7 +138,7 @@ function BookModal ({ isModalOpen, setIsModalOpen, book, className = '' }) {
                     <button
                       type="button"
                       className="inline-flex justify-center px-4 py-2 ml-3 text-sm font-medium text-gray-100 bg-red-500 border border-red-700 rounded-md hover:bg-red-600"
-                      >
+                      onClick={deleteBook}>
                       Delete
                     </button>
                     <button

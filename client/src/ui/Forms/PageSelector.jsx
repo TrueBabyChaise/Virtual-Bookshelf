@@ -2,12 +2,17 @@ import PropType from "prop-types"
 import { forwardRef } from "react"
 import { useState } from "react";
 
-const PageSelector = forwardRef(({ name, inputClass, className, Icon, label, onChange, value, pageMax, placeholder = '', required = false}, ref ) => {
+const PageSelector = forwardRef(({ setPage, page, name, inputClass, className, Icon, label, onChange, pageMax, placeholder = '', required = false}, ref ) => {
   
-  const [ page, setPage ] = useState(value || 0);
-
   const onChangeHandlerRange = (e) => {
-    const { value } = e.target;
+    let { value } = e.target;
+    value = parseInt(value);
+
+    if (isNaN(value)) {
+      e.target.value = 0;
+      setPage(0);
+      return;
+    }
     setPage(value);
   }
 
@@ -21,15 +26,14 @@ const PageSelector = forwardRef(({ name, inputClass, className, Icon, label, onC
       return;
     }
     value = Math.trunc(value);
-    e.target.value = value;
     if (value < 0) {
-      e.target.value = 0;
+      value = 0;
     }
-    console.log(value, pageMax);
     if (value > pageMax) {
-      e.target.value = pageMax;
+      value = pageMax;
     } 
-    setPage(e.target.value);
+    e.target.value = value;
+    setPage(value);
   }
   
   
@@ -71,10 +75,11 @@ const PageSelector = forwardRef(({ name, inputClass, className, Icon, label, onC
 PageSelector.displayName = "PageSelector";
 
 PageSelector.propTypes = {
+  setPage: PropType.func.isRequired,
+  page: PropType.number.isRequired,
   name: PropType.string.isRequired,
   pageMax: PropType.number,
   onChange: PropType.func,
-  value: PropType.any,
   inputClass: PropType.string,
   className: PropType.string,
   Icon: PropType.elementType,

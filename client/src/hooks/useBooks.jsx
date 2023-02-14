@@ -90,10 +90,50 @@ function useProvideBooks() {
 		}
 	}
 
+	const updateBookInfo = async (book) => {
+		setLoading(true)
+		try {
+			const { data } = await api.put(`/user/bookinfo/${book.fkBook}`, book)
+			setLoading(false)
+			books.forEach((b, i) => {
+				if (b._id === book._id) {
+					books[i] = book
+				}
+			})
+			setBooks([...books])
+			return data
+		} catch (error) {ERR_EMPTY_RESPONSE
+			setLoading(false)
+			throw error
+		}
+	}
+
+	const removeBook = async (book) => {
+		setLoading(true)
+		try {
+			const { data } = await api.delete(`/user/book/${book.fkBook}`)
+			setLoading(false)
+			books.forEach((b, i) => {
+				if (b._id === book._id) {
+					books.splice(i, 1)
+				}
+			})
+			setBooks([...books])
+			return data
+		} catch (error) {
+			setLoading(false)
+			throw error
+		}
+	}
+	
+
+
 	return {
 		loading,
 		books,
 		getUserBooks,
-		addBookISBN
+		updateBookInfo,
+		addBookISBN,
+		removeBook
 	}
 }

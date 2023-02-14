@@ -79,7 +79,6 @@ module.exports = {
             seriesFound.books.addToSet(e)
         })
 
-        console.log(seriesFound.key)
         if (!seriesFound.key)
             generateKeyBasedOnBooks(seriesFound)
         seriesFound.save()

@@ -38,7 +38,6 @@ function SignupForm () {
    * @param {object} e 
    */
 	const verificationPassword = e => {
-    console.log(passwordInput)
 		if(passwordInput.current.value !== confirmPasswordInput.current.value) {
 			confirmPasswordInput.current.setCustomValidity("The confirm password and the password must match")
 		} else {
