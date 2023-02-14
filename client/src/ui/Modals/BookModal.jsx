@@ -69,13 +69,13 @@ function BookModal ({ isModalOpen, setIsModalOpen, book, className = '' }) {
                       {book.synopsis}
                     </Dialog.Description>
                   </div>
-
+                  <div className="w-full">
+                      <PageSelector name="Page" label="Reading progress" pageMax={book.numberOfPages}/>
+                    </div>
                   {/* Status, nbr de page lue, rating, personnal comment, étagère de rangement */}
                   <div className="grid grid-cols-3 gap-5 gap-x-10 mt-10">
                     <Input type="text" label="Status" name="Status" />
-                    <div className="w-[120px]">
-                      <PageSelector type="text" name="Page" label="Progress" pageMax={book.numberOfPages}/>
-                    </div>
+                    
                     <Input type="text" label="Rating" name="Rating" />
                     <Input type="text" label="Shelf" name="Shelf" />
                   </div>
