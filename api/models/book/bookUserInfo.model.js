@@ -7,7 +7,7 @@ const BookUserInfo = new mongoose.Schema({
     rating: {type: Number},
     status: {type: Number},
     isbn: {type: String, required: true},
-    shelf: {type: mongoose.ObjectId, ref: 'shelf'},
+    serie: {type: mongoose.ObjectId, ref: 'serie'},
     fkUser: {type: mongoose.ObjectId, ref: 'user', required:true},
     fkBook: {type: mongoose.ObjectId, ref: 'book', required:true}
 });
@@ -58,6 +58,10 @@ async function removeBookUserInfoByBookId({fkBook, fkUser}) {
 
 async function updateBookUserInfoByBookId({fkBook, fkUser, newParams}) {
     const bookFound = await BookUserInfoModel.findOneAndUpdate({ fkBook, fkUser }, newParams)
+    if (!newParams.serie) {
+        bookFound.set('serie', undefined, { strict: false})
+        bookFound.save()
+    }
     if (bookFound)
         return bookFound;
     return undefined;

@@ -81,7 +81,6 @@ function useProvideBooks() {
 		try {
 			const { data } = await api.post(`/user/book/isbn/${book.isbn}`, book)
 			setLoading(false)
-			console.log(data)
 			setBooks([...books, data.data])
 			return data
 		} catch (error) {
@@ -102,7 +101,7 @@ function useProvideBooks() {
 			})
 			setBooks([...books])
 			return data
-		} catch (error) {ERR_EMPTY_RESPONSE
+		} catch (error) {
 			setLoading(false)
 			throw error
 		}
@@ -126,6 +125,17 @@ function useProvideBooks() {
 		}
 	}
 	
+	const getSeries = async () => {
+		setLoading(true)
+		try {
+			const { data } = await api.get('/series')
+			setLoading(false)
+			return data
+		} catch (error) {
+			setLoading(false)
+			throw error
+		}
+	}
 
 
 	return {
@@ -134,6 +144,7 @@ function useProvideBooks() {
 		getUserBooks,
 		updateBookInfo,
 		addBookISBN,
-		removeBook
+		removeBook,
+		getSeries
 	}
 }

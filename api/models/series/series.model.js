@@ -36,7 +36,8 @@ async function updateSeriesByTitle({title, fkUser, newParams}) {
     return undefined;
 }
 
-async function generateKeyBasedOnBooks(series, books) {
+async function generateKeyBasedOnBooks(series) {
+
     for (const id of series.books) {
         series.key.addToSet((await mongoose.model('book').findById(id)).isbn.slice(0, 8))
     }
@@ -67,7 +68,8 @@ module.exports = {
         seriesFound.books.addToSet(bookId)
         if (!seriesFound.key.length)
             generateKeyBasedOnBooks(seriesFound)
-        seriesFound.save()
+        else
+            seriesFound.save()
         return seriesFound
     },
 

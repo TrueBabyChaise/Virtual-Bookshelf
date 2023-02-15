@@ -15,16 +15,25 @@ function BookModal ({ isModalOpen, setIsModalOpen, book, className = '' }) {
   const [rating, setRating] = useState(book.rating ? book.rating : 0)
   const [status, setStatus] = useState(book.status ? book.status : 0)
   const [comment, setComment] = useState(book.comment ? book.comment : '')
-  const [shelf, setShelf] = useState(book.shelf ? book.shelf : '')
+  const [serie, setSerie] = useState(book.serie ? book.serie : -1)
 
-  const { updateBookInfo, removeBook } = useBooks()
+  const [series, setSeries] = useState([])
+
+  const { updateBookInfo, removeBook, getSeries } = useBooks()
+
+  const loadSeries = async () => {
+    const { data } = await getSeries()
+    setSeries([{title: "No Series", _id: -1}, ...data])
+  }
 
   useEffect(() => {
     setPage(book.page ? book.page : 0)
     setRating(book.rating ? book.rating : 0)
     setStatus(book.status ? book.status : 0)
     setComment(book.comment ? book.comment : '')
-    setShelf(book.shelf ? book.shelf : '')
+    setSerie(book.serie ? book.serie : -1)
+
+    loadSeries()
   }, [book])
 
   const deleteBook = () => {
@@ -38,8 +47,7 @@ function BookModal ({ isModalOpen, setIsModalOpen, book, className = '' }) {
     params.rating = rating
     params.status = status
     params.comment = comment
-    if (shelf !== '')
-      params.shelf = shelf
+    params.serie = serie == -1 ? undefined : serie
 
     book.params = params
 
@@ -121,9 +129,14 @@ function BookModal ({ isModalOpen, setIsModalOpen, book, className = '' }) {
                     />
                     
                     <Rating value={rating} label="Rating" name="Rating" setValue={setRating} />
-                    <Input type="text" value={shelf} label="Shelf" name="Shelf" onChange={(e) => {
-                      setShelf(e.target.value)
-                    }} />
+                    <Select value={serie} label="Serie" name="Serie" onChange={(e) => {
+                      setSerie(e.target.value)}}
+                      options={
+                        series.map((s) => {
+                          return {label: s.title, value: s._id}
+                        })
+                      }
+                    />
                   </div>
                   <div className="mt-5">
                     <Input type="text" value={comment} label="Comment" name="Comment" onChange={(e) => {

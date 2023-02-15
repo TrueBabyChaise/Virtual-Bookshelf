@@ -127,6 +127,9 @@ router.put('/:bookID', authToken, async (req, res) => {
 	const userId = req.user
 	let newParams = req.body.params
 
+	if (!newParams.serie)
+		newParams.serie = undefined
+
 	if (!userId)
 		res.status(403).json({ message: "Forbidden" })
 	else {
@@ -137,6 +140,7 @@ router.put('/:bookID', authToken, async (req, res) => {
 			else
 				res.status(422).json({ message: "Book not found" })
 		} catch (error) {
+			console.log(error)
 			res.status(422).json({ message: "Someting wrong happened" });
 		}
 	}
