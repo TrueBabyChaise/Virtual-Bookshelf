@@ -25,6 +25,9 @@ services:
       MONGO_USER: ${MONGO_USER}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
       MONGO_DB: ${MONGO_DB}
+      PORT: ${PORT}
+      HOST_CLIENT: ${HOST_CLIENT}
+      ENV: ${ENV}
     volumes:
       - ./api/routes:/api/routes
       - ./api/models:/api/models
@@ -43,6 +46,9 @@ services:
     build: 
       context : ./client
     image: virtual-bookshelf-client
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      ENV: ${ENV}
     ports:
       - 3000:3000
     networks:

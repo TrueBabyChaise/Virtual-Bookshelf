@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const { getBookInfo } = require('~/googleBooksApi');
 
 const Book = new mongoose.Schema({
-    
     title: {type: String, required: true},
     isbn: {type: String, required: true, unique: true},
     authors: {type: Array, default: []},
@@ -42,8 +41,8 @@ async function removeBookByISBN({isbn}) {
     return bookDeleted;
 }
 
-async function findOneBook({id}) {
-    const bookFound = await BookModel.find({ id })
+async function findOneBook({ _id }) {
+    const bookFound = await BookModel.find({ _id })
     if (bookFound.length)
         return bookFound[0];
     return undefined;
@@ -76,9 +75,11 @@ module.exports = {
         const bookFound = await findOneBookByISBN({isbn});
         if (!bookFound) {
             let bookData = await getBookInfo(isbn)
+            if (!bookData)
+                return false;
             if (bookData.isbn) {
                 const book = new BookModel(bookData);
-                book.save();
+                await book.save();
                 return book;
             }
         }

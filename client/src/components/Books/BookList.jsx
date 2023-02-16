@@ -1,31 +1,54 @@
 import PropType from "prop-types"
+import { useState } from "react"
 import BookCard from "@src/ui/Cards/BookCard"
+import BookModal from "@src/ui/Modals/BookModal"
+import { MdOutlineLibraryAdd } from "react-icons/md"
+import Router from 'next/router'
 
-function BookList ({ books }) {
+function BookList ({ booksInput, loading }) {
+  let [isModalOpen, setIsModalOpen] = useState(false)
+  let [book, setBook] = useState({})
 
-  const handleClick = e => {
-    console.log('Card clicked')
+  const handleCardClick = book => {
+    // Router.push(`/book/${book.isbn}`)
+    setBook(book)
+    setIsModalOpen(true)
   }
 
   return (
     // <div className="grid grid-rows-[repeat(auto-fill,18rem)] grid-cols-[repeat(auto-fill,13rem)] gap-5 justify-center">
-    <div className="grid gap-5 justify-center grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8">
+    <>
+      <BookModal 
+        isModalOpen={isModalOpen} 
+        setIsModalOpen={setIsModalOpen}
+        book={book}
+      />
       {
-        books.map((e,i) => (
-          <BookCard cover={e.cover}
-            className="h-64"
-            title={e.title}
-            key={i}
-            clickAction={handleClick} />
-        ))
+        !loading && booksInput.length > 0 ? <div  className="grid gap-5 justify-center grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8"> {
+          booksInput.map((e,i) => (
+            <BookCard cover={e.thumbnail}
+              className="h-64"
+              title={e.title}
+              key={i}
+              clickAction={() => handleCardClick(e)} /> 
+        )) }</div>: !loading ? 
+        <BookListInfo>You don't have a book yet... Try adding one by clicking on <MdOutlineLibraryAdd className="inline-block" />.</BookListInfo> : 
+        "Loading..."
       }
-      
+    </>
+  )
+}
+
+function BookListInfo ({ children }) {
+  return (
+    <div className="flex flex-col justify-center items-center py-8">
+      <p className="text-lg text-slate-100 font-light">{children}</p>
     </div>
   )
 }
 
 BookList.propTypes = {
-  books: PropType.array.isRequired
+  booksInput: PropType.array.isRequired
 }
 
 export default BookList
