@@ -2,22 +2,28 @@ import Head from 'next/head'
 import AppContainer from '@components/AppContainer'
 import BookList from "@components/Books/BookList"
 import BookListFilters from "@components/Books/BookListFilters"
+import { useEffect, useState } from "react"
+import toast from "react-hot-toast"
+import { useBooks } from "@src/hooks/useBooks"
 
 export default function Home() {
+  
+  const { getUserBooks, books, loading } = useBooks()
+  const [showBooks, setShowBooks] = useState([])
 
-  const books = [
-    {title: 'ノーゲーム･ノーライフ 1', cover: 'https://m.media-amazon.com/images/I/518zfvvGToS.jpg'},
-    {title: 'ノーゲーム･ノーライフ 2', cover: '/ngnl-covers/ngnl_tome_2.jpg'},
-    {title: 'ノーゲーム･ノーライフ 3', cover: '/ngnl-covers/ngnl_tome_3.jpg'},
-    {title: 'ノーゲーム･ノーライフ 4', cover: '/ngnl-covers/ngnl_tome_4.jpg'},
-    {title: 'ノーゲーム･ノーライフ 5', cover: '/ngnl-covers/ngnl_tome_5.jpg'},
-    {title: 'ノーゲーム･ノーライフ 6', cover: '/ngnl-covers/ngnl_tome_6.jpg'},
-    {title: 'ノーゲーム･ノーライフ 7', cover: '/ngnl-covers/ngnl_tome_7.jpg'},
-    {title: 'ノーゲーム･ノーライフ 8', cover: '/ngnl-covers/ngnl_tome_8.jpg'},
-    {title: 'ノーゲーム･ノーライフ 9', cover: '/ngnl-covers/ngnl_tome_9.jpg'},
-    {title: 'ノーゲーム･ノーライフ 10', cover: '/ngnl-covers/ngnl_tome_10.jpg'},
-    {title: 'ノーゲーム･ノーライフ 11', cover: '/ngnl-covers/ngnl_tome_11.jpg'}
-  ]
+  useEffect(() => {
+    getUserBooks()
+      .then(data => {
+        setShowBooks(data)
+      })
+      .catch(err => {
+        toast.error(err.message)
+      })
+  }, [])
+
+  useEffect(() => {
+    setShowBooks(books)
+  }, [books])
 
   return (
     <>
@@ -32,7 +38,7 @@ export default function Home() {
           <h1 className="text-4xl text-slate-100 font-bold">My Collection</h1>
         </header>
         <BookListFilters />
-        <BookList booksInput={books} />
+        <BookList booksInput={showBooks} loading={loading} />
       </AppContainer>
     </>
   )

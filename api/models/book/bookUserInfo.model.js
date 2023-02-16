@@ -2,10 +2,12 @@ const { createBookEntry, findOneBookByISBN } = require("@models/book/book.model"
 const mongoose = require('mongoose');
 const BookUserInfo = new mongoose.Schema({
     personnalTitle: {type: String},
-    note: {type: String},
-    score: {type: Number},
+    page: {type: Number},
+    comment: {type: String},
+    rating: {type: Number},
     status: {type: Number},
     isbn: {type: String, required: true},
+    serie: {type: mongoose.ObjectId, ref: 'serie'},
     fkUser: {type: mongoose.ObjectId, ref: 'user', required:true},
     fkBook: {type: mongoose.ObjectId, ref: 'book', required:true}
 });
@@ -56,6 +58,10 @@ async function removeBookUserInfoByBookId({fkBook, fkUser}) {
 
 async function updateBookUserInfoByBookId({fkBook, fkUser, newParams}) {
     const bookFound = await BookUserInfoModel.findOneAndUpdate({ fkBook, fkUser }, newParams)
+    if (!newParams.serie) {
+        bookFound.set('serie', undefined, { strict: false})
+        bookFound.save()
+    }
     if (bookFound)
         return bookFound;
     return undefined;
@@ -71,13 +77,15 @@ module.exports = {
     updateBookUserInfoByBookId,
     findAllBookUserInfoOfUser,
 
-    async createBookUserInfoEntry({isbn,fkUser}) {
-        const bookFound = await findOneBookUserInfoByISBN({isbn, fkUser});
+    async createBookUserInfoEntry(bookUserData, isbn) {
+        const bookFound = await findOneBookUserInfoByISBN({isbn: isbn, fkUser: bookUserData.fkUser});
         if (!bookFound) {
             let book = await findOneBookByISBN({isbn})
 			if (!book)
 				book = await createBookEntry({isbn})
-            const bookUserInfo = new BookUserInfoModel({isbn, fkUser, fkBook: book._id});
+            bookUserData.fkBook = book._id;
+            bookUserData.isbn = isbn;
+            const bookUserInfo = new BookUserInfoModel(bookUserData);
             bookUserInfo.save();
             return bookUserInfo;
         }
