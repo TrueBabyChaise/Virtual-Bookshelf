@@ -42,13 +42,16 @@ router.get('/isbn/:isbn', authToken, async (req, res) => {
 router.post('/isbn/:isbn', authToken, async (req, res) => {
 	const params = req.params
 	const isbn = params.isbn.replaceAll("-", "")
+	const bookData = req.body
 	const userId = req.user
+
+
 
 	if (!userId)
 		res.status(403).json({ message: "Forbidden" })
 	else {
 		try {
-			bookAdded = await createBookUserInfoEntry({ isbn, fkUser: userId })
+			bookAdded = await createBookUserInfoEntry({fkUser: userId}, isbn)
 			if (bookAdded)
 				res.status(200).json({ bookAdded });
 			else
@@ -122,7 +125,10 @@ router.put('/:bookID', authToken, async (req, res) => {
 	const params = req.params
 	const bookId = params.bookID
 	const userId = req.user
-	let newParams = req.body.book
+	let newParams = req.body.params
+
+	if (!newParams.serie)
+		newParams.serie = undefined
 
 	if (!userId)
 		res.status(403).json({ message: "Forbidden" })
@@ -134,6 +140,7 @@ router.put('/:bookID', authToken, async (req, res) => {
 			else
 				res.status(422).json({ message: "Book not found" })
 		} catch (error) {
+			console.log(error)
 			res.status(422).json({ message: "Someting wrong happened" });
 		}
 	}

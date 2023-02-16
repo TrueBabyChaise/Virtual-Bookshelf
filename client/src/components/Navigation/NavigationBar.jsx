@@ -3,6 +3,7 @@ import Search from "@components/Search/Search"
 import { useState, Fragment } from "react"
 import { useAuth } from "@hooks/useAuth"
 import { Menu, Transition } from "@headlessui/react"
+import Link from "next/link"
 import { MdOutlineHome, MdOutlineLibraryAdd, MdOutlineSettings, MdOutlineSupervisedUserCircle, MdOutlineLogout } from "react-icons/md"
 
 function NavigationBar({}) {
@@ -29,10 +30,10 @@ function NavigationBar({}) {
 
           <div className="pl-5">
             <div className="flex items-center w-full gap-2">
-              <NavigationTab subtitle="Your collection" 
+              <Link href="/"><NavigationTab subtitle="Your collection" 
                 Icon={MdOutlineHome} 
                 selected={true}
-                className="" />
+                className="" /></Link>
               <NavigationTab subtitle="Add a book" 
                 onClick={toggleSearch}
                 Icon={MdOutlineLibraryAdd} />
@@ -43,7 +44,7 @@ function NavigationBar({}) {
           {/* TODO: Faire un composant user menu */}
           <div className="ml-auto flex justify-center gap-2">
             <Menu as="div" className="relative inline-block">
-              <Menu.Button>
+              <Menu.Button as="div">
                 <NavigationTab title={ user.username }
                   Icon={MdOutlineSupervisedUserCircle} />
               </Menu.Button>

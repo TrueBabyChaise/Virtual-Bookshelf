@@ -28,11 +28,15 @@ router.get('/', authToken, async (req, res) => {
 		res.status(403).json({message: "Forbidden"})
 		return
 	}
-	const seriesFound = await findAllSeriesOfUser({fkUser: userId})
-	if (seriesFound) 
-		res.status(200).json({seriesFound})
-	else
-		res.status(422).json({message: "No series founds"});
+	try {
+		const seriesFound = await findAllSeriesOfUser({fkUser: userId})
+		if (seriesFound) 
+			res.status(200).json({data: seriesFound})
+		else
+			res.status(200).json({message: "Series not found", data: []});
+	} catch (e) {
+		res.status(500).json({message: "Something wrong happened", data: []});
+	}
 });
 
 router.post('/:title', authToken, async (req, res) => {

@@ -1,5 +1,6 @@
 import '@src/styles/globals.css'
 import { ProvideAuth, useAuth } from "@hooks/useAuth"
+import { ProvideBooks } from "@hooks/useBooks"
 import { Toaster } from 'react-hot-toast'
 import Router from 'next/router'
 import toastConfig from '@src/configs/toastConfig'
@@ -10,7 +11,9 @@ function MyApp({ Component, pageProps }) {
       <Toaster { ...toastConfig } />
       <ProvideAuth>
           <UserConfig pageProps={ pageProps }>
-              <Component {...pageProps }/>
+              <ProvideBooks>
+                <Component {...pageProps }/>
+              </ProvideBooks>
           </UserConfig>
       </ProvideAuth>
     </div>
