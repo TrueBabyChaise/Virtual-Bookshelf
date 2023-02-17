@@ -117,18 +117,18 @@ function BookModal ({ isModalOpen, setIsModalOpen, book, className = '' }) {
                     </div>
                   {/* Status, nbr de page lue, rating, personnal comment, étagère de rangement */}
                   <div className="grid grid-cols-3 gap-5 gap-x-10 mt-10">
+                    <Rating value={rating} label="Rating" name="Rating" setValue={setRating} />
                     <Select value={status} label="Status" name="Status" onChange={(e) => {
                       setStatus(e.target.value)}}
                       options={[
                         { value: 0, label: 'Reading' },
                         { value: 1, label: 'To read' },
-                        { value: 2, label: 'Read' },
+                        { value: 2, label: 'Completed'},
                         { value: 3, label: 'Abandoned'},
                         { value: 4, label: 'On hold'},
                       ]}
                     />
                     
-                    <Rating value={rating} label="Rating" name="Rating" setValue={setRating} />
                     <Select value={serie} label="Serie" name="Serie" onChange={(e) => {
                       setSerie(e.target.value)}}
                       options={
