@@ -6,6 +6,7 @@ const {  updateBookUserInfoByISBN, findOneBookUserInfoByISBN, removeBookUserInfo
 	updateBookUserInfoByBookId, findOneBookUserInfoByBookId, removeBookUserInfoByBookId,
 	createBookUserInfoEntry, findAllBookUserInfoOfUser } 
 	= require("@models/book/bookUserInfo.model");
+const unidecode = require('unidecode');
 
 
 function createBookJson(book, bookInfo) {
@@ -15,6 +16,10 @@ function createBookJson(book, bookInfo) {
 
 router.get('/', authToken, async (req, res) => {
 	const userId = req.user
+	const query = req.query.q ? req.query.q : ""
+
+	const queryDesired = unidecode(query)
+
 	if (!userId)
 		res.status(404).json({ message: "Not found" })
 	else {
@@ -22,11 +27,11 @@ router.get('/', authToken, async (req, res) => {
 		const books = []
 		for (let i = 0; i < booksInfo.length; i++) {
 			const book = await findOneBook({_id: booksInfo[i].fkBook})
-			if (book) {
-				books.push(createBookJson(book, booksInfo[i]))
-			} else {
+			if (!book)
 				booksInfo[i].delete()
-			}
+			const bookTitle = unidecode(book.title)
+			if (book && bookTitle.toLowerCase().includes(queryDesired.toLowerCase()))
+				books.push(createBookJson(book, booksInfo[i]))
 		}
 		res.status(200).json(books);
 	}
