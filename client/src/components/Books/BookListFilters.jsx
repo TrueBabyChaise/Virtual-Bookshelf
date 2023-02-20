@@ -6,12 +6,21 @@ import { MdOutlineBook,
 import Input from "@ui/Forms/Input"
 import TagButton from "@ui/Buttons/TagButton"
 import { Popover } from "@headlessui/react"
+import { useBooks } from "@src/hooks/useBooks"
+import { useEffect } from "react"
 
 function BookListFilters () {
+
+  const { querySearch, setQuerySearch, getUserBooks } = useBooks()
+
 
   const handleTagClick = e => {
     console.log('button click')
   }
+
+  useEffect(() => {
+    getUserBooks()
+  }, [querySearch])
 
   return (
     <div className="flex mb-5">
@@ -20,7 +29,11 @@ function BookListFilters () {
         <TagButton title="Series" clickAction={handleTagClick} Icon={MdOutlineCollectionsBookmark} active={false} />
       </div>
       <div className="ml-auto flex">
-        <Input type="text" name="search" Icon={ MdOutlineSearch } inputClass="w-48" className="my-auto mr-4" />
+        <Input type="text" value={querySearch} name="search" Icon={ MdOutlineSearch } inputClass="w-48" className="my-auto mr-4"onChange={(e) => {
+          console.log('input change')
+          setQuerySearch(e.target.value)    
+        }}
+        />
         <Popover className="relative flex">
           <Popover.Button className="flex px-2 py-1 h-9 my-auto rounded bg-slate-100 hover:bg-slate-200 text-gray-900 items-center">
             <MdOutlineFilterAlt className="mr-1" /> Filters <MdKeyboardArrowDown className="ml-4" />

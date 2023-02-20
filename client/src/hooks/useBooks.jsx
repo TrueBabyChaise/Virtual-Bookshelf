@@ -1,4 +1,4 @@
-import React, { useState, useContext, createContext, useRef } from "react"
+import React, { useState, useContext, createContext, useRef, useEffect } from "react"
 import api from "@src/configs/api"
 
 const booksContext = createContext()
@@ -62,11 +62,12 @@ export function useBooksSearchApi() {
 function useProvideBooks() {
 	const [loading, setLoading] = useState(false)
 	const [books, setBooks] = useState([])
-	
+	const [querySearch, setQuerySearch] = useState('')
+
 	const getUserBooks = async () => {
 		setLoading(true)
 		try {
-			const { data } = await api.get('/user/book')
+			const { data } = await api.get('/user/book?q=' + querySearch)
 			setLoading(false)
 			setBooks(data)
 			return data
@@ -141,6 +142,8 @@ function useProvideBooks() {
 	return {
 		loading,
 		books,
+		querySearch,
+		setQuerySearch,
 		getUserBooks,
 		updateBookInfo,
 		addBookISBN,
