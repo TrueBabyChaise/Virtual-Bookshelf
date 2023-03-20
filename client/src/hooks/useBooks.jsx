@@ -69,6 +69,10 @@ function useProvideBooks() {
 		try {
 			const { data } = await api.get('/user/book?q=' + querySearch)
 			setLoading(false)
+			if (JSON.stringify(data) == JSON.stringify(books)) {
+				console.log('SAME')
+				return
+			}
 			setBooks(data)
 			return data
 		} catch (error) {

@@ -12,16 +12,6 @@ export default function Home() {
   const [showBooks, setShowBooks] = useState([])
 
   useEffect(() => {
-    getUserBooks()
-      .then(data => {
-        setShowBooks(data)
-      })
-      .catch(err => {
-        toast.error(err.message)
-      })
-  }, [])
-
-  useEffect(() => {
     setShowBooks(books)
   }, [books])
 

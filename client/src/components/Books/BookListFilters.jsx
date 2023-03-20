@@ -19,6 +19,7 @@ function BookListFilters () {
   }
 
   useEffect(() => {
+    console.log('querySearch', querySearch)
     getUserBooks()
   }, [querySearch])
 
