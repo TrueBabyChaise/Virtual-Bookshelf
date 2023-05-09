@@ -1,20 +1,36 @@
-const { createUser, findOneByName } = require("../../models/user/user.model");
+const { createUser, findOneByEmail, findOneById } = require("../../models/user/user.model");
 const { createHash, comparePassword } = require("../../bcrypt");
+const authToken = require("~/passport/authToken");
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const jwtOptions = require("../../passport/jwtOptions");
 
-router.post('/login', async (req, res) => {
-	const { username, password } = req.body;
-	if (!username || !password) {
-		res.status(401);
+
+router.get('/still_alive', authToken, async (req, res) => {
+	const user = await findOneById(req.user)
+	if (!user) {
+		res.status(400).json({ message: "Dead !"})
 	} else {
-		let user = await findOneByName(username);
+		res.status(200).json({ message: "Still Alive !", user: {username: user.username}})
+	}
+});
+
+router.post('/login', async (req, res) => {
+	const { email, password } = req.body;
+	if (!email || !password) {
+		res.status(401).json({ message: "Empty credentials"})
+	} else {
+		let user = await findOneByEmail(email);
 		if (user) {
 			const passCheck = await comparePassword(password, user.password)
 			if (passCheck) {
-				let token = jwt.sign(user._id.toJSON(), jwtOptions.secretOrKey);
-				res.status(200).json({ message : "User logged in", token: token });
+				let token = jwt.sign({id: user._id}, jwtOptions.secretOrKey, jwtOptions.options);
+				return res.cookie("access_token", token, {
+					httpOnly: true,
+					secure: false
+				})
+				.status(200)
+				.json({ message : "User logged in", user: {username: user.username}});
 			} else {
 				res.status(401).json({ message : "Wrong password" });
 			}
@@ -24,16 +40,17 @@ router.post('/login', async (req, res) => {
 	}
 });
 
-router.post('/logout', (req, res) => {
+router.post('/logout', authToken, (req, res) => {
+	res.clearCookie("access_token")
 	res.status(200).json({ message : "You're logged out."});
 });
 
 router.post('/register', async (req, res) => {
-	const { username, password } = req.body;
+	const { email, username, password } = req.body;
 	const pass = await createHash(password);
 	let user = null;
 	try {
-		user = await createUser({ username, password:pass });
+		user = await createUser({ email, username, password:pass });
 	} catch (err) {
 		res.status(404).json({ message : "Something went wrong" });
 		return;

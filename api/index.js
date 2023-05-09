@@ -1,4 +1,5 @@
 require('dotenv').config()
+const moduleAlias = require('module-alias/register')
 const express = require('express');
 const http = require('http');
 const db = require('./database/database.js');
@@ -10,10 +11,15 @@ const strategy = require('./passport/auth');
 const routes = require('./routes');
 const app = express();
 
+console.log(process.env.HOST_CLIENT)
+
 app.use(
-        cors({origin: '*'})
+        cors({origin: process.env.HOST_CLIENT, credentials: true})
 );
 
+/*app.use(
+        cors({origin: '*'})
+);*/
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
