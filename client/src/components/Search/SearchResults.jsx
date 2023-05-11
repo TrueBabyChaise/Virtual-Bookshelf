@@ -10,7 +10,7 @@ export default function SearchResults ({ loading, resultsData, handleClick }) {
         { resultsData.books 
           && resultsData.books.length > 0 
           && resultsData.books.map(
-            b => <SearchResultsRow key={b.title} {...b} handleClick={handleClick} />
+            b => <SearchResultsRow key={b.isbn} {...b} handleClick={handleClick} />
           ) }
       </div>
     </div>
