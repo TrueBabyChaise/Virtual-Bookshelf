@@ -1,14 +1,22 @@
 import '@src/styles/globals.css'
 import { ProvideAuth, useAuth } from "@hooks/useAuth"
 import { ProvideBooks } from "@hooks/useBooks"
-import { Toaster } from 'react-hot-toast'
+import DismissableToast from '@src/ui/DismissableToast'
 import Router from 'next/router'
-import toastConfig from '@src/configs/toastConfig'
+import { BlockConfig } from '@src/configs/notiflixConfig'
+import { useEffect } from 'react'
+import { Block } from "notiflix"
 
 function MyApp({ Component, pageProps }) {
+
+  useEffect(() => {
+    console.log('useEffect')
+    Block.init(BlockConfig)
+  }, [])
+
   return (
     <div className="dark">
-      <Toaster { ...toastConfig } />
+      <DismissableToast />
       <ProvideAuth>
           <UserConfig pageProps={ pageProps }>
               <ProvideBooks>
