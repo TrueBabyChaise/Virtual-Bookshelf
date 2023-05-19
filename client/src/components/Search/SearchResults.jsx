@@ -1,10 +1,20 @@
 import { useEffect } from "react"
 import SearchResultsRow from "./SearchResultsRow"
+import { Block } from "notiflix"
 
 export default function SearchResults ({ loading, resultsData, handleClick }) {
 
+  useEffect(() => {
+    console.log(loading)
+    if(loading) {
+      Block.standard('#searchResultBookContainer', 'Loading...')
+    } else {
+      Block.remove('#searchResultBookContainer')
+    }
+  }, [loading])
+
   return (
-    <div className="mt-4 w-full flex flex-col min-h-0 rounded bg-gray-900 overflow-hidden flex-1">
+    <div id="searchResultBookContainer" className="mt-4 w-full flex flex-col min-h-0 rounded bg-gray-900 overflow-hidden flex-1">
       {/* <p>{ loading ? 'Loading...' : 'Not Loading' }</p> */}
       <div className="overflow-auto">
         { resultsData.books 
