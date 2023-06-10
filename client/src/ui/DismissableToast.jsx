@@ -3,11 +3,6 @@ import toastConfig from '@src/configs/toastConfig'
 
 export default function DismissableToast() {
 
-  const handleToastClick = (e) => {
-    console.log(e)
-    toast.dismiss(t.id)
-  }
-
   return (
     <div>
       <Toaster { ...toastConfig }>
