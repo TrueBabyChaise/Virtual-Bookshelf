@@ -86,7 +86,8 @@ function SignupForm () {
 					onChange={verificationPassword}
           className="my-3" />
 
-        <DefaultButton className="mt-4 mx-auto" title="Submit" type="submit" />
+        <DefaultButton className="mt-4 mx-auto" title="Submit" type="submit" id="submitForm" />
+
         <div className="mt-6">
           <Link className="text-slate-400 text-xs text-center block hover:text-slate-100" 
             href="/login">
