@@ -10,7 +10,6 @@ import { Block } from "notiflix"
 function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
-    console.log('useEffect')
     Block.init(BlockConfig)
   }, [])
 
